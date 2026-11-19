@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ananya &amp; Kabir — The Royal Wedding Celebration | The Oberoi Udaivilas, Udaipur</title>
+  <meta name="description" content="With great joy, we invite you to celebrate the sacred wedding union of Ananya &amp; Kabir on December 11 – 12, 2026 at The Oberoi Udaivilas, Udaipur." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Google Fonts: Cormorant Garamond, Cinzel, Montserrat & Alex Brush -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&amp;family=Cinzel:wght@400;500;600&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Theme Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: {
+              50: '#FDFBF7',
+              100: '#FBF7EE',
+              200: '#F6EEDB',
+              300: '#EDE0C3',
+            },
+            champagne: {
+              300: '#EBD49D',
+              400: '#DFC27C',
+              500: '#C5A059',
+              600: '#A4823A',
+              700: '#7E6328',
+            },
+            emerald: {
+              800: '#0F382A',
+              900: '#09251C',
+              950: '#051812',
+            },
+            roseGold: {
+              300: '#F0C2B8',
+              400: '#E0A899',
+              500: '#C98A7B',
+            }
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            display: ['"Cinzel"', 'serif'],
+            script: ['"Alex Brush"', 'cursive'],
+            sans: ['"Montserrat"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Production Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="bg-ivory-50 text-slate-800 font-sans selection:bg-champagne-400 selection:text-emerald-950 overflow-x-hidden antialiased">
+
+  <!-- TOP SCROLL PROGRESS BAR -->
+  <div class="fixed top-0 left-0 right-0 h-[2.5px] z-[60] bg-transparent pointer-events-none">
+    <div id="scroll-progress" class="h-full w-0 bg-gradient-to-r from-champagne-500 via-champagne-300 to-champagne-500 shadow-[0_0_10px_rgba(223,194,124,0.8)] transition-all duration-150"></div>
+  </div>
+
+  <!-- FLOATING FLOWER PETALS LAYER -->
+  <div id="petals-container" class="fixed inset-0 pointer-events-none z-20 overflow-hidden" aria-hidden="true"></div>
+
+  <!-- LUXURY TOAST NOTIFICATION -->
+  <div
+    id="luxury-toast"
+    role="status"
+    aria-live="polite"
+    class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[70] translate-y-24 opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-3 px-5 py-3 rounded-full bg-emerald-950/95 backdrop-blur-xl border border-champagne-400/70 text-ivory-50 shadow-[0_15px_35px_rgba(0,0,0,0.5)]"
+  >
+    <i id="luxury-toast-icon" data-lucide="sparkles" class="w-4 h-4 text-champagne-400 flex-shrink-0"></i>
+    <span id="luxury-toast-text" class="text-xs tracking-wider font-medium">Notification</span>
+  </div>
+
+  <!-- FLOATING ACTION BUTTON FOR ADDING A WISH -->
+  <aside aria-label="Guestbook Actions" class="fixed bottom-6 right-6 z-40 flex items-center space-x-2.5">
+    <button
+      id="toggle-petals-btn"
+      type="button"
+      title="Toggle Falling Petals"
+      class="p-3.5 rounded-full bg-emerald-950/90 backdrop-blur-md text-champagne-300 border border-champagne-400/40 shadow-xl hover:border-champagne-400 hover:scale-105 transition-all duration-300 hidden sm:flex items-center justify-center"
+    >
+      <i data-lucide="flower-2" class="w-4 h-4"></i>
+    </button>
+    <button
+      id="open-wish-dialog-btn"
+      type="button"
+      class="group flex items-center space-x-3 px-5 py-3.5 rounded-full bg-gradient-to-r from-champagne-500 via-champagne-400 to-champagne-500 text-emerald-950 font-semibold shadow-2xl hover:shadow-[0_0_30px_rgba(223,194,124,0.65)] transform hover:-translate-y-1 transition-all duration-300 border border-champagne-300"
+    >
+      <span class="text-base animate-pulse">✨</span>
+      <span class="text-xs uppercase tracking-[0.2em] font-sans font-bold">Send Blessing / Add Wish</span>
+      <span class="w-2 h-2 rounded-full bg-emerald-900 group-hover:scale-125 transition-transform"></span>
+    </button>
+  </aside>
+
+  <!-- DRAGGABLE FLOATING "ADD A WISH" DIALOG -->
+  <div
+    id="draggable-wish-dialog"
+    role="dialog"
+    aria-labelledby="dialog-title"
+    class="draggable-dialog fixed hidden opacity-0 scale-95 z-50 w-[92vw] max-w-md bg-white/95 backdrop-blur-2xl border border-champagne-400/80 rounded-2xl overflow-hidden transition-all duration-300"
+    style="top: 14%; right: 4%;"
+  >
+    <!-- Drag Handle Header -->
+    <div
+      id="dialog-header"
+      title="Drag to move • Double-click to reset position"
+      class="cursor-move bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 px-5 py-4 flex items-center justify-between text-ivory-50 select-none border-b border-champagne-500/30"
+    >
+      <div class="flex items-center space-x-2.5">
+        <i data-lucide="grip-vertical" class="w-4 h-4 text-champagne-400 opacity-80"></i>
+        <div class="flex items-center space-x-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-champagne-400"></i>
+          <span id="dialog-title" class="font-serif text-lg font-normal tracking-wide text-ivory-50">Bless Ananya &amp; Kabir</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-1.5">
+        <button
+          id="minimize-dialog-btn"
+          type="button"
+          class="p-1.5 rounded-md hover:bg-white/10 text-ivory-200 transition-colors"
+          title="Minimize / Expand Dialog"
+        >
+          <i data-lucide="minus" class="w-4 h-4"></i>
+        </button>
+        <button
+          id="close-wish-dialog-btn"
+          type="button"
+          class="p-1.5 rounded-md hover:bg-white/10 text-ivory-200 transition-colors"
+          title="Close Dialog"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dialog Content Body -->
+    <div id="dialog-body" class="p-6 transition-all duration-300">
+      <p class="text-xs text-slate-600 font-light mb-4 leading-relaxed">
+        Share your love and warm wishes for the couple. Your blessing will immediately appear in the live celebration guestbook!
+      </p>
+
+      <form id="dialog-wish-form" class="space-y-3.5">
+        <div>
+          <label for="dlg-name" class="block text-[11px] uppercase tracking-wider text-slate-700 font-semibold mb-1">Your Full Name *</label>
+          <input
+            id="dlg-name"
+            type="text"
+            required
+            placeholder="e.g. Rohini &amp; Siddharth Mehta"
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-champagne-500 focus:ring-2 focus:ring-champagne-400/20 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="dlg-relationship" class="block text-[11px] uppercase tracking-wider text-slate-700 font-semibold mb-1">Connection</label>
+            <select
+              id="dlg-relationship"
+              class="w-full px-3 py-2.5 rounded-lg border border-slate-300 focus:border-champagne-500 focus:ring-2 focus:ring-champagne-400/20 text-xs text-slate-800 outline-none transition-all bg-white"
+            >
+              <option value="Friend of Couple">Friend of Couple</option>
+              <option value="Bride's Family">Bride's Family</option>
+              <option value="Groom's Family">Groom's Family</option>
+              <option value="Colleague / Mentor">Colleague / Mentor</option>
+              <option value="Well Wisher">Well Wisher</option>
+            </select>
+          </div>
+          <div>
+            <label for="dlg-location" class="block text-[11px] uppercase tracking-wider text-slate-700 font-semibold mb-1">Your City</label>
+            <input
+              id="dlg-location"
+              type="text"
+              placeholder="e.g. Mumbai, India"
+              class="w-full px-3 py-2.5 rounded-lg border border-slate-300 focus:border-champagne-500 focus:ring-2 focus:ring-champagne-400/20 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400"
+            />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="dlg-message" class="block text-[11px] uppercase tracking-wider text-slate-700 font-semibold">Your Warm Blessing *</label>
+            <span class="text-[10px] text-champagne-600 font-medium">Quick prompts below</span>
+          </div>
+          <textarea
+            id="dlg-message"
+            rows="3"
+            required
+            placeholder="May your lives together be showered with boundless joy, laughter and sacred love..."
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:border-champagne-500 focus:ring-2 focus:ring-champagne-400/20 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400 resize-none"
+          ></textarea>
+          <!-- Quick Blessing Inspiration Chips -->
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            <button
+              type="button"
+              data-blessing="May every sunset over Lake Pichola bring you closer in love, laughter, and lifelong harmony!"
+              class="blessing-chip-btn text-[10px] px-2.5 py-1 rounded-full bg-ivory-100 hover:bg-champagne-300/40 text-slate-700 border border-champagne-300/60 transition-colors"
+            >
+              ✨ Lake Pichola Blessing
+            </button>
+            <button
+              type="button"
+              data-blessing="Sada Suhagan Raho! Wishing Ananya &amp; Kabir a lifetime of health, adventure, and endless joy."
+              class="blessing-chip-btn text-[10px] px-2.5 py-1 rounded-full bg-ivory-100 hover:bg-champagne-300/40 text-slate-700 border border-champagne-300/60 transition-colors"
+            >
+              🙏 Traditional Aashirwad
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-950 to-emerald-900 text-champagne-300 font-medium text-xs tracking-[0.2em] uppercase hover:from-champagne-600 hover:to-champagne-500 hover:text-emerald-950 transition-all duration-300 shadow-md flex items-center justify-center space-x-2"
+        >
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Post Your Blessing</span>
+        </button>
+      </form>
+
+      <div
+        id="dlg-success-msg"
+        class="hidden mt-3 p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-800 text-[11px] flex items-center space-x-2"
+      >
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
+        <span>Thank you! Your heartfelt blessing is now live in the guestbook.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY TOP NAVIGATION -->
+  <header
+    id="navbar"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-5 px-5 sm:px-8 bg-gradient-to-b from-emerald-950/80 to-transparent text-ivory-50"
+  >
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <!-- Brand Monogram -->
+      <a href="#hero" class="flex items-center space-x-3 group">
+        <span class="font-script text-3xl sm:text-4xl text-champagne-400 group-hover:text-champagne-300 transition-colors">Ananya &amp; Kabir</span>
+        <span class="text-[10px] uppercase tracking-[0.3em] font-sans text-ivory-200/75 hidden sm:inline border-l border-champagne-400/40 pl-3">The Wedding</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav aria-label="Main Navigation" class="hidden lg:flex items-center space-x-7 text-[11px] uppercase tracking-[0.22em] font-medium text-ivory-100">
+        <a class="nav-link active hover:text-champagne-400 transition-colors" href="#hero">Welcome</a>
+        <a class="nav-link hover:text-champagne-400 transition-colors" href="#story">Our Story</a>
+        <a class="nav-link hover:text-champagne-400 transition-colors" href="#schedule">Itinerary</a>
+        <a class="nav-link hover:text-champagne-400 transition-colors" href="#venue">Destination Venue</a>
+        <a class="nav-link hover:text-champagne-400 transition-colors" href="#gallery">Gallery</a>
+        <a class="nav-link hover:text-champagne-400 transition-colors" href="#wishes">Guestbook</a>
+      </nav>
+
+      <!-- Header Right Actions -->
+      <div class="flex items-center space-x-2.5 sm:space-x-3">
+        <!-- Ambient Royal Chimes Button -->
+        <button
+          id="toggle-audio-btn"
+          type="button"
+          title="Toggle Royal Udaipur Ambient Chimes"
+          class="inline-flex items-center space-x-2 px-3.5 py-2 rounded-full border border-champagne-400/40 bg-emerald-900/50 backdrop-blur text-[11px] tracking-widest uppercase text-ivory-100 hover:border-champagne-400 transition-all duration-300"
+        >
+          <span class="flex items-end space-x-0.5 h-3.5" aria-hidden="true">
+            <span class="eq-bar h-1.5"></span>
+            <span class="eq-bar h-2.5"></span>
+            <span class="eq-bar h-1"></span>
+            <span class="eq-bar h-2"></span>
+          </span>
+          <span id="audio-label" class="hidden sm:inline text-[10px]">Royal Audio</span>
+        </button>
+
+        <!-- Send Wish CTA -->
+        <button
+          type="button"
+          onclick="openWishDialog()"
+          class="inline-flex items-center space-x-2 px-4 sm:px-5 py-2 rounded-full border border-champagne-400/60 bg-emerald-900/70 backdrop-blur text-[11px] tracking-widest uppercase hover:bg-champagne-500 hover:text-emerald-950 transition-all duration-300"
+        >
+          <i data-lucide="heart" class="w-3.5 h-3.5 text-champagne-400"></i>
+          <span>Send Wish</span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          aria-expanded="false"
+          aria-label="Toggle Navigation Menu"
+          class="lg:hidden p-2 rounded-full border border-champagne-400/40 bg-emerald-900/60 text-champagne-300 hover:bg-emerald-800 transition-colors"
+        >
+          <i data-lucide="menu" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div
+      id="mobile-menu"
+      class="hidden lg:hidden mt-3 pt-4 pb-5 px-4 rounded-2xl bg-emerald-950/95 backdrop-blur-xl border border-champagne-500/30 shadow-2xl space-y-3 text-center"
+    >
+      <div class="grid grid-cols-2 gap-2 text-xs uppercase tracking-[0.2em] font-medium text-ivory-100">
+        <a href="#hero" class="py-2.5 rounded-lg hover:bg-white/5 hover:text-champagne-400">Welcome</a>
+        <a href="#story" class="py-2.5 rounded-lg hover:bg-white/5 hover:text-champagne-400">Our Story</a>
+        <a href="#schedule" class="py-2.5 rounded-lg hover:bg-white/5 hover:text-champagne-400">Itinerary</a>
+        <a href="#venue" class="py-2.5 rounded-lg hover:bg-white/5 hover:text-champagne-400">Venue</a>
+        <a href="#gallery" class="py-2.5 rounded-lg hover:bg-white/5 hover:text-champagne-400">Gallery</a>
+        <a href="#wishes" class="py-2.5 rounded-lg hover:bg-white/5 hover:text-champagne-400">Guestbook</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       1. HERO SECTION WITH WORKING LUXURY COUNTDOWN TIMER
+       ======================================================================== -->
+  <section
+    id="hero"
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-emerald-950 text-ivory-50 pt-28 pb-16"
+  >
+    <!-- Hero Editorial Portrait Backdrop -->
+    <div class="absolute inset-0 z-0 overflow-hidden">
+      <img
+        id="hero-bg-img"
+        src="assets/images/hero-couple.png"
+        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1920&q=85';"
+        alt="Ananya and Kabir Royal Palace Wedding Portrait at The Oberoi Udaivilas"
+        class="w-full h-full object-cover object-center hero-ken-burns"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/70 to-emerald-950/75"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_15%,rgba(5,24,18,0.88)_100%)]"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center flex flex-col items-center">
+      <!-- Top Invitation Line -->
+      <div class="inline-flex items-center space-x-3 mb-5 reveal-elem">
+        <span class="w-8 sm:w-12 h-[1px] bg-champagne-400/80"></span>
+        <span class="font-sans text-[11px] sm:text-xs uppercase tracking-[0.38em] text-champagne-300 font-light">
+          With great joy, we invite you to celebrate
+        </span>
+        <span class="w-8 sm:w-12 h-[1px] bg-champagne-400/80"></span>
+      </div>
+
+      <!-- Couple Names (Fixed Line-Height & Spacing — Never Overlaps Subtitle) -->
+      <h1 class="font-serif text-5xl sm:text-7xl md:text-8xl font-normal tracking-wide text-ivory-50 leading-[1.15] mb-5 reveal-elem">
+        <span>Ananya</span>
+        <span class="font-script text-champagne-400 text-5xl sm:text-7xl md:text-8xl mx-2 sm:mx-3 inline-block translate-y-1">&amp;</span>
+        <span>Kabir</span>
+      </h1>
+
+      <!-- Romantic Quote -->
+      <p class="font-serif italic text-xl sm:text-2xl text-ivory-100/90 max-w-2xl mx-auto font-light leading-relaxed mb-7 reveal-elem">
+        "Two souls, two hearts, woven together beneath a thousand blessings and endless laughter."
+      </p>
+
+      <!-- Date & Single Destination Venue Pill -->
+      <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm uppercase tracking-[0.28em] font-sans border-y border-champagne-500/35 py-3.5 px-6 sm:px-10 mb-9 text-champagne-300 bg-emerald-950/40 backdrop-blur-sm rounded-full reveal-elem">
+        <span class="flex items-center gap-2">
+          <i data-lucide="calendar-heart" class="w-4 h-4 text-champagne-400"></i>
+          <span>December 11 – 12, 2026</span>
+        </span>
+        <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-champagne-400"></span>
+        <span class="flex items-center gap-2">
+          <i data-lucide="map-pin" class="w-4 h-4 text-champagne-400"></i>
+          <span>The Oberoi Udaivilas, Udaipur</span>
+        </span>
+      </div>
+
+      <!-- LUXURY FRAMELESS COUNTDOWN TIMER COMPONENT -->
+      <div class="reveal-elem w-full max-w-xl mb-11">
+        <div class="flex items-center justify-center space-x-5 sm:space-x-10">
+          <!-- Days -->
+          <div class="flex flex-col items-center">
+            <span id="timer-days" class="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-wider text-ivory-50 timer-glow">27</span>
+            <span class="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-champagne-300/90 font-medium mt-2">Days</span>
+          </div>
+
+          <span class="w-[1px] h-10 sm:h-12 bg-champagne-400/35"></span>
+
+          <!-- Hours -->
+          <div class="flex flex-col items-center">
+            <span id="timer-hours" class="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-wider text-ivory-50 timer-glow">18</span>
+            <span class="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-champagne-300/90 font-medium mt-2">Hours</span>
+          </div>
+
+          <span class="w-[1px] h-10 sm:h-12 bg-champagne-400/35"></span>
+
+          <!-- Minutes -->
+          <div class="flex flex-col items-center">
+            <span id="timer-minutes" class="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-wider text-ivory-50 timer-glow">01</span>
+            <span class="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-champagne-300/90 font-medium mt-2">Minutes</span>
+          </div>
+
+          <span class="w-[1px] h-10 sm:h-12 bg-champagne-400/35"></span>
+
+          <!-- Seconds -->
+          <div class="flex flex-col items-center">
+            <span id="timer-seconds" class="font-display text-4xl sm:text-5xl md:text-6xl font-normal tracking-wider text-champagne-400 timer-glow">35</span>
+            <span class="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-champagne-300/90 font-medium mt-2">Seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Primary & Secondary Actions -->
+      <div class="flex flex-wrap items-center justify-center gap-4 reveal-elem">
+        <a
+          href="#schedule"
+          class="px-8 py-3.5 rounded-full bg-gradient-to-r from-champagne-500 to-champagne-400 text-emerald-950 font-semibold text-xs tracking-[0.24em] uppercase hover:shadow-[0_0_28px_rgba(197,160,89,0.55)] transition-all duration-300 transform hover:-translate-y-0.5"
+        >
+          View Wedding Itinerary
+        </a>
+        <a
+          href="#gallery"
+          class="px-8 py-3.5 rounded-full border border-champagne-400/60 bg-emerald-950/40 backdrop-blur-sm text-ivory-100 hover:border-champagne-300 hover:bg-champagne-500/15 text-xs tracking-[0.24em] uppercase transition-all duration-300"
+        >
+          Explore Moments
+        </a>
+        <button
+          type="button"
+          onclick="downloadCalendarEvent('all')"
+          class="px-6 py-3.5 rounded-full border border-champagne-400/40 bg-white/5 hover:bg-white/10 text-champagne-300 text-xs tracking-[0.2em] uppercase transition-all duration-300 inline-flex items-center space-x-2"
+        >
+          <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+          <span>Save The Date</span>
+        </button>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <a href="#story" class="mt-12 flex flex-col items-center text-ivory-300/75 hover:text-champagne-300 transition-colors animate-bounce">
+        <span class="text-[10px] uppercase tracking-[0.35em] mb-1.5 font-light">Scroll to Explore</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 text-champagne-400"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       2. ROMANTIC PRELUDE NOTE & INTERACTIVE LOVE STORY TIMELINE
+       ======================================================================== -->
+  <section id="story" class="py-24 bg-ivory-100 royal-pattern-light relative border-b border-champagne-300/40">
+    <div class="max-w-4xl mx-auto px-6 text-center reveal-elem">
+      <div class="w-14 h-14 mx-auto mb-6 flex items-center justify-center rounded-full bg-champagne-400/20 text-champagne-600 border border-champagne-400/40">
+        <i data-lucide="sparkles" class="w-6 h-6"></i>
+      </div>
+      <span class="text-xs uppercase tracking-[0.35em] text-champagne-600 font-semibold block mb-2">Our Love Story</span>
+      <h2 class="font-serif text-3xl sm:text-5xl text-emerald-950 mb-6 font-normal">A Celebration of Love, Laughter &amp; Tradition</h2>
+      <div class="w-20 h-[1px] bg-champagne-400 mx-auto mb-8"></div>
+      <p class="font-serif text-xl sm:text-2xl text-slate-700 leading-relaxed font-light mb-6">
+        From our serendipitous first coffee in the drizzling streets of South Mumbai to countless stargazing conversations across continents, our path has led us here. We cannot imagine stepping into this sacred new chapter without the warm presence, blessings, and laughter of our dearest family and friends.
+      </p>
+      <div class="font-script text-4xl sm:text-5xl text-champagne-600 mt-4">— Ananya &amp; Kabir</div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       3. EVENTS SCHEDULE (SINGLE DESTINATION VENUE: THE OBEROI UDAIVILAS)
+       ======================================================================== -->
+  <section id="schedule" class="py-28 bg-emerald-950 royal-pattern-dark text-ivory-50 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <!-- Section Heading -->
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal-elem">
+        <div class="inline-flex items-center space-x-2 text-champagne-400 text-xs tracking-[0.3em] uppercase mb-3">
+          <i data-lucide="calendar" class="w-4 h-4"></i>
+          <span>The Ceremonies</span>
+        </div>
+        <h2 class="font-serif text-4xl sm:text-5xl font-normal text-ivory-50 mb-4">Celebration Itinerary</h2>
+        <p class="font-sans text-sm text-ivory-200/75 tracking-wide font-light">
+          All ceremonies are exclusively hosted at the picturesque pavilions of <strong class="text-champagne-300 font-medium">The Oberoi Udaivilas, Udaipur</strong>.
+        </p>
+      </div>
+
+      <!-- Events Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- EVENT 1: HALDI UTSAV -->
+        <article
+          data-day="day1"
+          class="ceremony-card glass-card rounded-2xl p-7 flex flex-col justify-between transition-all duration-500 group transform hover:-translate-y-2 relative overflow-hidden reveal-elem"
+        >
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <span class="px-3.5 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                Auspicious Radiance
+              </span>
+              <span class="text-xs tracking-widest text-champagne-400/80 font-mono">Day 01</span>
+            </div>
+
+            <!-- Event Image -->
+            <div class="w-full h-52 rounded-xl overflow-hidden mb-6 relative bg-emerald-900">
+              <img
+                src="assets/images/haldi-utsav.png"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80';"
+                alt="Haldi Utsav Celebration at The Marigold Courtyard"
+                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/85 via-transparent to-transparent"></div>
+              <div class="absolute bottom-3 left-4 text-xs font-medium text-amber-200 tracking-wider flex items-center gap-1.5">
+                <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-300"></i>
+                <span>Morning Ceremony</span>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-3xl text-ivory-50 mb-2 group-hover:text-champagne-300 transition-colors">The Haldi Utsav</h3>
+            <p class="text-xs text-ivory-200/75 mb-5 font-light leading-relaxed">
+              A vibrant morning of golden turmeric, marigold petals, playful splashing water, and joyful blessings under the Mewari sun.
+            </p>
+
+            <!-- Dedicated Dress Code & Interactive Swatches -->
+            <div class="p-4 rounded-xl bg-black/30 border border-champagne-400/25 mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] uppercase tracking-[0.22em] text-champagne-300 font-semibold">
+                  Dress Code: Sunshine &amp; Marigold
+                </span>
+                <span class="text-[9px] text-ivory-300/60">Tap swatch</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  data-color="#FFD54F"
+                  data-tip="Sunshine Yellow: Breezy cotton silks, organza Kurtas &amp; floral lehengas."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 border border-amber-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #FFD54F;"></span>
+                  <span>Sunshine Yellow</span>
+                </button>
+                <button
+                  type="button"
+                  data-color="#E5A93C"
+                  data-tip="Festive Mustard: Bandhani prints, mirror-work jackets &amp; chanderi drapes."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 border border-amber-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #E5A93C;"></span>
+                  <span>Festive Mustard</span>
+                </button>
+                <button
+                  type="button"
+                  data-color="#FF9800"
+                  data-tip="Warm Marigold: Vibrant tangerine &amp; marigold accents with floral jewellery."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 border border-amber-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #FF9800;"></span>
+                  <span>Warm Marigold</span>
+                </button>
+              </div>
+              <div class="swatch-tip-box hidden mt-2.5 pt-2 border-t border-white/10 text-[11px] text-ivory-200 flex items-center space-x-2">
+                <span class="swatch-tip-dot w-2.5 h-2.5 rounded-full flex-shrink-0"></span>
+                <span class="swatch-tip-label font-light"></span>
+              </div>
+            </div>
+
+            <!-- Event Details -->
+            <div class="space-y-3 border-t border-champagne-500/20 pt-5 text-sm text-ivory-200/90 font-light">
+              <div class="flex items-start space-x-3">
+                <i data-lucide="clock" class="w-4 h-4 text-champagne-400 mt-1 flex-shrink-0"></i>
+                <div>
+                  <div class="font-medium text-ivory-100">Thursday, Dec 11, 2026</div>
+                  <div class="text-xs text-ivory-300/60">10:30 AM onwards</div>
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <i data-lucide="map-pin" class="w-4 h-4 text-champagne-400 mt-1 flex-shrink-0"></i>
+                <div>
+                  <div class="font-medium text-ivory-100">The Marigold Courtyard</div>
+                  <div class="text-xs text-champagne-300/80">The Oberoi Udaivilas, Udaipur</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- EVENT 2: THE GRAND SANGEET -->
+        <article
+          data-day="day1"
+          class="ceremony-card glass-card rounded-2xl p-7 flex flex-col justify-between transition-all duration-500 group transform hover:-translate-y-2 relative overflow-hidden border-champagne-500/50 shadow-[0_0_30px_rgba(197,160,89,0.14)] reveal-elem reveal-delay-100"
+        >
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <span class="px-3.5 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Music &amp; Dancing
+              </span>
+              <span class="text-xs tracking-widest text-champagne-400/80 font-mono">Day 01 Night</span>
+            </div>
+
+            <!-- Event Image -->
+            <div class="w-full h-52 rounded-xl overflow-hidden mb-6 relative bg-emerald-900">
+              <img
+                src="assets/images/grand-sangeet.png"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';"
+                alt="Grand Sangeet Night at Royal Grand Ballroom"
+                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/85 via-transparent to-transparent"></div>
+              <div class="absolute bottom-3 left-4 text-xs font-medium text-champagne-200 tracking-wider flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-champagne-400"></i>
+                <span>Evening Gala &amp; Dancing</span>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-3xl text-ivory-50 mb-2 group-hover:text-champagne-300 transition-colors">The Grand Sangeet</h3>
+            <p class="text-xs text-ivory-200/75 mb-5 font-light leading-relaxed">
+              An unforgettable night beneath sparkling fairy lights featuring family dance battles, energetic dhol, and artisanal cocktails.
+            </p>
+
+            <!-- Dedicated Dress Code & Interactive Swatches -->
+            <div class="p-4 rounded-xl bg-black/30 border border-champagne-400/25 mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] uppercase tracking-[0.22em] text-champagne-300 font-semibold">
+                  Dress Code: Royal Emerald &amp; Glitz
+                </span>
+                <span class="text-[9px] text-ivory-300/60">Tap swatch</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  data-color="#0F5132"
+                  data-tip="Royal Emerald: Velvet sherwanis, emerald sequined gowns &amp; couture sarees."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #0F5132;"></span>
+                  <span>Royal Emerald</span>
+                </button>
+                <button
+                  type="button"
+                  data-color="#102A43"
+                  data-tip="Deep Sapphire: Midnight blue tuxedos, Indo-western bandhgalas &amp; jewel tones."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-blue-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #102A43;"></span>
+                  <span>Deep Sapphire</span>
+                </button>
+                <button
+                  type="button"
+                  data-color="#D4AF37"
+                  data-tip="Metallic Gold: Shimmering zardozi, antique gold lehengas &amp; statement jewellery."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 border border-champagne-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #D4AF37;"></span>
+                  <span>Metallic Gold</span>
+                </button>
+              </div>
+              <div class="swatch-tip-box hidden mt-2.5 pt-2 border-t border-white/10 text-[11px] text-ivory-200 flex items-center space-x-2">
+                <span class="swatch-tip-dot w-2.5 h-2.5 rounded-full flex-shrink-0"></span>
+                <span class="swatch-tip-label font-light"></span>
+              </div>
+            </div>
+
+            <!-- Event Details -->
+            <div class="space-y-3 border-t border-champagne-500/20 pt-5 text-sm text-ivory-200/90 font-light">
+              <div class="flex items-start space-x-3">
+                <i data-lucide="clock" class="w-4 h-4 text-champagne-400 mt-1 flex-shrink-0"></i>
+                <div>
+                  <div class="font-medium text-ivory-100">Thursday, Dec 11, 2026</div>
+                  <div class="text-xs text-ivory-300/60">07:00 PM onwards</div>
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <i data-lucide="map-pin" class="w-4 h-4 text-champagne-400 mt-1 flex-shrink-0"></i>
+                <div>
+                  <div class="font-medium text-ivory-100">Royal Grand Ballroom</div>
+                  <div class="text-xs text-champagne-300/80">The Oberoi Udaivilas, Udaipur</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- EVENT 3: THE WEDDING VOWS -->
+        <article
+          data-day="day2"
+          class="ceremony-card glass-card rounded-2xl p-7 flex flex-col justify-between transition-all duration-500 group transform hover:-translate-y-2 relative overflow-hidden reveal-elem reveal-delay-200"
+        >
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <span class="px-3.5 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-champagne-500/20 text-champagne-300 border border-champagne-500/30">
+                The Sacred Union
+              </span>
+              <span class="text-xs tracking-widest text-champagne-400/80 font-mono">Day 02</span>
+            </div>
+
+            <!-- Event Image -->
+            <div class="w-full h-52 rounded-xl overflow-hidden mb-6 relative bg-emerald-900">
+              <img
+                src="assets/images/wedding-mandap.png"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1545232972-907670f1f696?auto=format&fit=crop&w=800&q=80';"
+                alt="Royal Wedding Ceremony at Sunset Lakeside Promenade"
+                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/85 via-transparent to-transparent"></div>
+              <div class="absolute bottom-3 left-4 text-xs font-medium text-champagne-200 tracking-wider flex items-center gap-1.5">
+                <i data-lucide="Flame" class="w-3.5 h-3.5 text-champagne-400"></i>
+                <span>Vedic Pheras at Sunset</span>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-3xl text-ivory-50 mb-2 group-hover:text-champagne-300 transition-colors">The Wedding Vows</h3>
+            <p class="text-xs text-ivory-200/75 mb-5 font-light leading-relaxed">
+              Baraat procession followed by the sacred Vedic Pheras at sunset overlooking Lake Pichola, culminating in a royal banquet dinner.
+            </p>
+
+            <!-- Dedicated Dress Code & Interactive Swatches -->
+            <div class="p-4 rounded-xl bg-black/30 border border-champagne-400/25 mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] uppercase tracking-[0.22em] text-champagne-300 font-semibold">
+                  Dress Code: Ivory, Champagne &amp; Blush
+                </span>
+                <span class="text-[9px] text-ivory-300/60">Tap swatch</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  data-color="#FFFDF9"
+                  data-tip="Classic Ivory: Chikankari sherwanis, ivory silk sarees &amp; pearl embellishments."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-slate-300/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner border border-slate-400/30" style="background-color: #FFFDF9;"></span>
+                  <span>Classic Ivory</span>
+                </button>
+                <button
+                  type="button"
+                  data-color="#E2C992"
+                  data-tip="Champagne Gold: Tissue silk drapes, gold brocade achkans &amp; heritage jadau."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 border border-champagne-400/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #E2C992;"></span>
+                  <span>Champagne Gold</span>
+                </button>
+                <button
+                  type="button"
+                  data-color="#F7D6D0"
+                  data-tip="Pastel Blush: Rose-blush lehengas, soft organza dupattas &amp;polki diamonds."
+                  class="swatch-pill inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-rose-950/60 border border-rose-300/40 text-[10px] text-ivory-100"
+                >
+                  <span class="w-3 h-3 rounded-full shadow-inner" style="background-color: #F7D6D0;"></span>
+                  <span>Pastel Blush</span>
+                </button>
+              </div>
+              <div class="swatch-tip-box hidden mt-2.5 pt-2 border-t border-white/10 text-[11px] text-ivory-200 flex items-center space-x-2">
+                <span class="swatch-tip-dot w-2.5 h-2.5 rounded-full flex-shrink-0"></span>
+                <span class="swatch-tip-label font-light"></span>
+              </div>
+            </div>
+
+            <!-- Event Details -->
+            <div class="space-y-3 border-t border-champagne-500/20 pt-5 text-sm text-ivory-200/90 font-light">
+              <div class="flex items-start space-x-3">
+                <i data-lucide="clock" class="w-4 h-4 text-champagne-400 mt-1 flex-shrink-0"></i>
+                <div>
+                  <div class="font-medium text-ivory-100">Friday, Dec 12, 2026</div>
+                  <div class="text-xs text-ivory-300/60">Baraat: 4:30 PM | Pheras: 5:45 PM</div>
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <i data-lucide="map-pin" class="w-4 h-4 text-champagne-400 mt-1 flex-shrink-0"></i>
+                <div>
+                  <div class="font-medium text-ivory-100">Sunset Lakeside Promenade</div>
+                  <div class="text-xs text-champagne-300/80">The Oberoi Udaivilas, Udaipur</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       4. SINGLE DESTINATION VENUE SECTION (THE OBEROI UDAIVILAS)
+       ======================================================================== -->
+  <section id="venue" class="py-28 bg-ivory-50 text-slate-800 relative">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal-elem">
+        <span class="text-xs uppercase tracking-[0.35em] text-champagne-600 font-semibold block mb-2">The Destination</span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-normal text-emerald-950 mb-4">Our Sacred Celebration Venue</h2>
+        <div class="w-20 h-[1px] bg-champagne-400 mx-auto mb-4"></div>
+        <p class="font-sans text-sm text-slate-600 font-light">
+          All our wedding celebrations will unfold amidst the regal courtyards and lakeside splendour of a singular royal palace resort. Select any pavilion below to preview its setting.
+        </p>
+      </div>
+
+      <!-- Unified Single Luxury Venue Card -->
+      <div class="bg-white rounded-3xl border border-champagne-300/70 shadow-2xl overflow-hidden reveal-elem">
+        <div class="grid grid-cols-1 lg:grid-cols-12">
+
+          <!-- Venue Visuals & Dynamic Showcase -->
+          <div class="lg:col-span-6 relative min-h-[400px] lg:min-h-full bg-emerald-950 overflow-hidden">
+            <img
+              id="venue-showcase-img"
+              src="assets/images/udaivilas-palace.png"
+              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85';"
+              alt="The Oberoi Udaivilas Udaipur"
+              class="w-full h-full object-cover transition-opacity duration-300"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/35 to-transparent"></div>
+
+            <!-- Top Badges -->
+            <div class="absolute top-6 left-6 right-6 flex items-center justify-between gap-2">
+              <span
+                id="venue-showcase-badge"
+                class="px-4 py-1.5 rounded-full bg-champagne-500 text-emerald-950 text-xs font-semibold uppercase tracking-widest shadow-md"
+              >
+                Official Wedding Venue
+              </span>
+              <button
+                type="button"
+                onclick="selectPavilion('overview')"
+                class="px-3 py-1.5 rounded-full bg-emerald-950/80 backdrop-blur-md text-champagne-300 border border-champagne-400/40 text-[10px] uppercase tracking-widest hover:bg-champagne-500 hover:text-emerald-950 transition-colors"
+              >
+                Palace Overview
+              </button>
+            </div>
+
+            <!-- Bottom Dynamic Venue Details -->
+            <div class="absolute bottom-6 left-6 right-6 text-ivory-50">
+              <div class="flex items-center space-x-2 text-champagne-300 text-xs uppercase tracking-widest mb-1">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                <span id="venue-showcase-loc">Lake Pichola, Udaipur</span>
+              </div>
+              <h3 id="venue-showcase-title" class="font-serif text-3xl sm:text-4xl font-normal text-ivory-50">
+                The Oberoi Udaivilas
+              </h3>
+              <p id="venue-showcase-desc" class="text-xs sm:text-sm text-ivory-200/85 font-light mt-1.5 leading-relaxed">
+                Surrounded by Mewari domes, reflection pools, and 50 acres of historic royal grounds overlooking Lake Pichola.
+              </p>
+              <div class="mt-3 pt-3 border-t border-white/15 flex items-center justify-between text-[11px] text-champagne-300">
+                <span id="venue-showcase-timing">December 11 – 12, 2026 • Full Resort Buyout</span>
+                <span class="uppercase tracking-wider text-ivory-300/70">Udaipur • 24°C / 12°C</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Venue Interactive Pavilion Directory & Logistics -->
+          <div class="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-2 text-xs uppercase tracking-[0.25em] text-champagne-600 font-semibold">
+                  <i data-lucide="compass" class="w-4 h-4"></i>
+                  <span>Interactive Pavilion Directory</span>
+                </div>
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Click to preview</span>
+              </div>
+
+              <!-- Pavilions List -->
+              <div class="space-y-3.5 mb-8">
+                <button
+                  type="button"
+                  data-pavilion="marigold"
+                  class="pavilion-card-btn w-full text-left flex items-start justify-between p-3.5 rounded-xl bg-ivory-100/80 hover:bg-champagne-300/20 border border-champagne-300/50 transition-all group"
+                >
+                  <div class="flex items-start space-x-3.5">
+                    <div class="w-8 h-8 rounded-full bg-amber-400/20 text-amber-700 flex items-center justify-center flex-shrink-0 text-sm font-serif font-semibold">I</div>
+                    <div>
+                      <strong class="text-emerald-950 text-sm font-medium block group-hover:text-champagne-700 transition-colors">The Marigold Courtyard</strong>
+                      <span class="text-xs text-slate-600">Haldi Utsav • Day 01 Morning (10:30 AM)</span>
+                    </div>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-champagne-600 mt-1 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
+                </button>
+
+                <button
+                  type="button"
+                  data-pavilion="ballroom"
+                  class="pavilion-card-btn w-full text-left flex items-start justify-between p-3.5 rounded-xl bg-ivory-100/80 hover:bg-champagne-300/20 border border-champagne-300/50 transition-all group"
+                >
+                  <div class="flex items-start space-x-3.5">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-800 flex items-center justify-center flex-shrink-0 text-sm font-serif font-semibold">II</div>
+                    <div>
+                      <strong class="text-emerald-950 text-sm font-medium block group-hover:text-champagne-700 transition-colors">Royal Grand Ballroom</strong>
+                      <span class="text-xs text-slate-600">The Grand Sangeet • Day 01 Night (07:00 PM)</span>
+                    </div>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-champagne-600 mt-1 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
+                </button>
+
+                <button
+                  type="button"
+                  data-pavilion="promenade"
+                  class="pavilion-card-btn w-full text-left flex items-start justify-between p-3.5 rounded-xl bg-ivory-100/80 hover:bg-champagne-300/20 border border-champagne-300/50 transition-all group"
+                >
+                  <div class="flex items-start space-x-3.5">
+                    <div class="w-8 h-8 rounded-full bg-champagne-400/30 text-champagne-700 flex items-center justify-center flex-shrink-0 text-sm font-serif font-semibold">III</div>
+                    <div>
+                      <strong class="text-emerald-950 text-sm font-medium block group-hover:text-champagne-700 transition-colors">Sunset Lakeside Promenade</strong>
+                      <span class="text-xs text-slate-600">Sacred Pheras &amp; Royal Dinner • Day 02 (4:30 PM onwards)</span>
+                    </div>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-champagne-600 mt-1 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
+                </button>
+              </div>
+
+              <!-- Address & Concierge Note -->
+              <div class="space-y-3 text-xs text-slate-600 font-light border-t border-slate-100 pt-5">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center space-x-2.5">
+                    <i data-lucide="map" class="w-4 h-4 text-champagne-600 flex-shrink-0"></i>
+                    <span>Haridas Ji Ki Magri, Mulla Talai, Udaipur, Rajasthan 313001, India</span>
+                  </div>
+                  <button
+                    id="copy-address-btn"
+                    type="button"
+                    class="px-2.5 py-1 rounded-md bg-ivory-200/80 hover:bg-champagne-300/40 text-emerald-950 text-[10px] font-medium uppercase tracking-wider flex items-center space-x-1 flex-shrink-0 transition-colors"
+                    title="Copy Address"
+                  >
+                    <i data-lucide="copy" class="w-3 h-3"></i>
+                    <span>Copy</span>
+                  </button>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-champagne-600 flex-shrink-0"></i>
+                  <span>24/7 Royal Chauffeur Valet &amp; Private Lake Pichola Shikara Boat Transfer</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Single Open In Google Maps Button -->
+            <div class="mt-8 pt-6 border-t border-champagne-300/40">
+              <a
+                href="https://maps.google.com/?q=The+Oberoi+Udaivilas+Udaipur"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full py-4 px-6 rounded-xl bg-emerald-950 text-ivory-50 font-medium text-xs tracking-[0.2em] uppercase flex items-center justify-center space-x-3 hover:bg-champagne-600 hover:text-emerald-950 transition-all duration-300 shadow-lg group"
+              >
+                <i data-lucide="navigation" class="w-4 h-4 text-champagne-400 group-hover:text-emerald-950 transition-colors"></i>
+                <span>Open in Google Maps Navigation</span>
+                <i data-lucide="external-link" class="w-4 h-4 opacity-75"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Airport Assistance & Travel Note -->
+      <div class="mt-8 bg-ivory-200/60 rounded-2xl p-6 border border-champagne-300/60 flex flex-col sm:flex-row items-center justify-between text-slate-700 text-sm reveal-elem gap-4">
+        <div class="flex items-center space-x-4">
+          <div class="w-10 h-10 rounded-full bg-champagne-400/25 flex items-center justify-center text-champagne-700 flex-shrink-0">
+            <i data-lucide="plane" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="font-semibold text-emerald-950">Nearest Airport:</span> Maharana Pratap Airport Udaipur (UDR) — 45 mins private chauffeur transfer directly to The Oberoi Udaivilas.
+          </div>
+        </div>
+        <span class="text-xs uppercase tracking-wider text-champagne-700 font-semibold flex-shrink-0 bg-white/80 px-3.5 py-1.5 rounded-full border border-champagne-300/50">
+          Airport hospitality desk available on arrival
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       5. COUPLE'S PHOTO GALLERY WITH FULLSCREEN LIGHTBOX & DOWNLOAD
+       ======================================================================== -->
+  <section id="gallery" class="py-28 bg-emerald-950 royal-pattern-dark text-ivory-50 relative">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Section Heading -->
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal-elem">
+        <div class="inline-flex items-center space-x-2 text-champagne-400 text-xs tracking-[0.3em] uppercase mb-3">
+          <i data-lucide="camera" class="w-4 h-4"></i>
+          <span>Frozen in Time</span>
+        </div>
+        <h2 class="font-serif text-4xl sm:text-5xl font-normal text-ivory-50 mb-4">Cherished Moments</h2>
+        <p class="font-sans text-sm text-ivory-200/75 tracking-wide font-light">
+          Click any portrait for an immersive high-resolution lightbox view, zoom inspection, and instant keepsake download.
+        </p>
+      </div>
+
+      <!-- Gallery Grid (6 Curated Editorial Photographs) -->
+      <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+
+        <!-- Photo 1: Golden Hour Elegance -->
+        <div
+          data-category="portraits"
+          data-badge="Couple Portrait"
+          data-title="Golden Hour Elegance"
+          data-desc="Our pre-wedding portrait during golden hour in the sandstone arches of The Oberoi Udaivilas."
+          data-img="assets/images/hero-couple.png"
+          class="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl aspect-[4/5] bg-emerald-900 border border-champagne-500/25 gallery-item reveal-elem"
+        >
+          <img
+            src="assets/images/hero-couple.png"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=900&q=85';"
+            alt="Ananya and Kabir Golden Hour Portrait"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/25 to-transparent opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <span class="text-[10px] uppercase tracking-widest text-champagne-300 font-sans mb-1">Couple Portrait</span>
+            <h4 class="font-serif text-2xl text-ivory-50 font-normal">Golden Hour Elegance</h4>
+            <p class="text-xs text-ivory-200/75 font-light mt-1 line-clamp-2">Our pre-wedding portrait during golden hour in the sandstone arches of The Oberoi Udaivilas.</p>
+            <div class="mt-4 flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-xs text-ivory-200/90 font-light flex items-center gap-1.5">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-champagne-400"></i> Tap to inspect
+              </span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); triggerDownload('assets/images/hero-couple.png', 'Ananya-Kabir-Golden-Hour-Portrait.png')"
+                class="quick-download-btn p-2.5 rounded-full bg-champagne-500 hover:bg-champagne-400 text-emerald-950 transition-colors shadow-md"
+                title="Download High-Res Image"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 2: Marigold Laughter (Haldi) -->
+        <div
+          data-category="celebrations"
+          data-badge="Haldi Celebrations"
+          data-title="Marigold Laughter"
+          data-desc="Turmeric blessings, joyous laughter, and cascading marigold petal showers in the sunlit courtyard."
+          data-img="assets/images/haldi-utsav.png"
+          class="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl aspect-[4/5] bg-emerald-900 border border-champagne-500/25 gallery-item reveal-elem"
+        >
+          <img
+            src="assets/images/haldi-utsav.png"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=85';"
+            alt="Haldi Ceremony Moments"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/25 to-transparent opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <span class="text-[10px] uppercase tracking-widest text-amber-300 font-sans mb-1">Haldi Celebrations</span>
+            <h4 class="font-serif text-2xl text-ivory-50 font-normal">Marigold Laughter</h4>
+            <p class="text-xs text-ivory-200/75 font-light mt-1 line-clamp-2">Turmeric blessings, joyous laughter, and cascading marigold petal showers in the sunlit courtyard.</p>
+            <div class="mt-4 flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-xs text-ivory-200/90 font-light flex items-center gap-1.5">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-champagne-400"></i> Tap to inspect
+              </span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); triggerDownload('assets/images/haldi-utsav.png', 'Ananya-Kabir-Haldi-Laughter.png')"
+                class="quick-download-btn p-2.5 rounded-full bg-champagne-500 hover:bg-champagne-400 text-emerald-950 transition-colors shadow-md"
+                title="Download High-Res Image"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 3: Twirling into Midnight (Sangeet) -->
+        <div
+          data-category="celebrations"
+          data-badge="Sangeet Gala"
+          data-title="Twirling into Midnight"
+          data-desc="Dancing the night away under a shimmering canopy of crystal chandeliers and warm fairy lights."
+          data-img="assets/images/grand-sangeet.png"
+          class="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl aspect-[4/5] bg-emerald-900 border border-champagne-500/25 gallery-item reveal-elem"
+        >
+          <img
+            src="assets/images/grand-sangeet.png"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=85';"
+            alt="Sangeet Couple Dance"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/25 to-transparent opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <span class="text-[10px] uppercase tracking-widest text-emerald-300 font-sans mb-1">Sangeet Gala</span>
+            <h4 class="font-serif text-2xl text-ivory-50 font-normal">Twirling into Midnight</h4>
+            <p class="text-xs text-ivory-200/75 font-light mt-1 line-clamp-2">Dancing the night away under a shimmering canopy of crystal chandeliers and warm fairy lights.</p>
+            <div class="mt-4 flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-xs text-ivory-200/90 font-light flex items-center gap-1.5">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-champagne-400"></i> Tap to inspect
+              </span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); triggerDownload('assets/images/grand-sangeet.png', 'Ananya-Kabir-Grand-Sangeet.png')"
+                class="quick-download-btn p-2.5 rounded-full bg-champagne-500 hover:bg-champagne-400 text-emerald-950 transition-colors shadow-md"
+                title="Download High-Res Image"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 4: The Sacred Mandap -->
+        <div
+          data-category="palace"
+          data-badge="The Ceremony"
+          data-title="The Sacred Mandap"
+          data-desc="Seven sacred vows surrounded by white roses, mogra jasmine garlands, and glowing brass diyas over Lake Pichola."
+          data-img="assets/images/wedding-mandap.png"
+          class="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl aspect-[4/5] bg-emerald-900 border border-champagne-500/25 gallery-item reveal-elem"
+        >
+          <img
+            src="assets/images/wedding-mandap.png"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1545232972-907670f1f696?auto=format&fit=crop&w=900&q=85';"
+            alt="Sacred Wedding Mandap"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/25 to-transparent opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <span class="text-[10px] uppercase tracking-widest text-champagne-300 font-sans mb-1">The Ceremony</span>
+            <h4 class="font-serif text-2xl text-ivory-50 font-normal">The Sacred Mandap</h4>
+            <p class="text-xs text-ivory-200/75 font-light mt-1 line-clamp-2">Seven sacred vows surrounded by white roses, mogra jasmine garlands, and glowing brass diyas over Lake Pichola.</p>
+            <div class="mt-4 flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-xs text-ivory-200/90 font-light flex items-center gap-1.5">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-champagne-400"></i> Tap to inspect
+              </span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); triggerDownload('assets/images/wedding-mandap.png', 'Ananya-Kabir-Sacred-Mandap.png')"
+                class="quick-download-btn p-2.5 rounded-full bg-champagne-500 hover:bg-champagne-400 text-emerald-950 transition-colors shadow-md"
+                title="Download High-Res Image"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 5: Twilight at Udaivilas -->
+        <div
+          data-category="palace"
+          data-badge="Royal Destination"
+          data-title="Twilight at Udaivilas"
+          data-desc="Mewari domes and serene reflection pools glowing in warm champagne light at dusk."
+          data-img="assets/images/udaivilas-palace.png"
+          class="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl aspect-[4/5] bg-emerald-900 border border-champagne-500/25 gallery-item reveal-elem"
+        >
+          <img
+            src="assets/images/udaivilas-palace.png"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=85';"
+            alt="The Oberoi Udaivilas at Twilight"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/25 to-transparent opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <span class="text-[10px] uppercase tracking-widest text-champagne-300 font-sans mb-1">Royal Destination</span>
+            <h4 class="font-serif text-2xl text-ivory-50 font-normal">Twilight at Udaivilas</h4>
+            <p class="text-xs text-ivory-200/75 font-light mt-1 line-clamp-2">Mewari domes and serene reflection pools glowing in warm champagne light at dusk.</p>
+            <div class="mt-4 flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-xs text-ivory-200/90 font-light flex items-center gap-1.5">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-champagne-400"></i> Tap to inspect
+              </span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); triggerDownload('assets/images/udaivilas-palace.png', 'Ananya-Kabir-Udaivilas-Palace.png')"
+                class="quick-download-btn p-2.5 rounded-full bg-champagne-500 hover:bg-champagne-400 text-emerald-950 transition-colors shadow-md"
+                title="Download High-Res Image"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 6: Whispers by Lake Pichola -->
+        <div
+          data-category="portraits"
+          data-badge="Couple Portrait"
+          data-title="Whispers by Lake Pichola"
+          data-desc="A quiet candlelit stroll along the lakeside terrace after our engagement toast."
+          data-img="assets/images/lakeside-promenade.png"
+          class="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl aspect-[4/5] bg-emerald-900 border border-champagne-500/25 gallery-item reveal-elem"
+        >
+          <img
+            src="assets/images/lakeside-promenade.png"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=900&q=85';"
+            alt="Ananya and Kabir Lakeside Promenade Portrait"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/25 to-transparent opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <span class="text-[10px] uppercase tracking-widest text-roseGold-300 font-sans mb-1">Couple Portrait</span>
+            <h4 class="font-serif text-2xl text-ivory-50 font-normal">Whispers by Lake Pichola</h4>
+            <p class="text-xs text-ivory-200/75 font-light mt-1 line-clamp-2">A quiet candlelit stroll along the lakeside terrace after our engagement toast.</p>
+            <div class="mt-4 flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-xs text-ivory-200/90 font-light flex items-center gap-1.5">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-champagne-400"></i> Tap to inspect
+              </span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); triggerDownload('assets/images/lakeside-promenade.png', 'Ananya-Kabir-Lakeside-Promenade.png')"
+                class="quick-download-btn p-2.5 rounded-full bg-champagne-500 hover:bg-champagne-400 text-emerald-950 transition-colors shadow-md"
+                title="Download High-Res Image"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FULLSCREEN LIGHTBOX MODAL -->
+  <div
+    id="lightbox-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-title"
+    class="fixed inset-0 z-[80] bg-emerald-950/95 backdrop-blur-2xl hidden flex-col items-center justify-between p-4 sm:p-6 transition-opacity duration-300 opacity-0"
+  >
+    <!-- Top Bar -->
+    <div class="w-full max-w-6xl flex flex-wrap justify-between items-center gap-4 text-ivory-100 z-10">
+      <div>
+        <div class="flex items-center space-x-2.5">
+          <span id="lightbox-category" class="text-[10px] uppercase tracking-[0.25em] text-champagne-400 font-semibold">Couple Portrait</span>
+          <span class="text-xs text-ivory-300/40">•</span>
+          <span id="lightbox-counter" class="text-xs font-mono text-ivory-200/80">1 / 6</span>
+        </div>
+        <h4 id="lightbox-title" class="font-serif text-2xl sm:text-3xl text-ivory-50">Photo Title</h4>
+        <p id="lightbox-desc" class="text-xs text-ivory-300/75 font-light mt-0.5">Short description</p>
+      </div>
+
+      <div class="flex items-center space-x-2.5">
+        <!-- Zoom Toggle Button -->
+        <button
+          id="lightbox-zoom-btn"
+          type="button"
+          class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-ivory-100 transition-colors"
+          title="Toggle Zoom"
+        >
+          <i data-lucide="zoom-in" class="w-5 h-5"></i>
+        </button>
+        <!-- Direct High-Res Download Button -->
+        <button
+          id="lightbox-download-btn"
+          type="button"
+          class="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-champagne-500 text-emerald-950 font-semibold text-xs tracking-wider uppercase hover:bg-champagne-400 transition-colors shadow-lg"
+        >
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Download High-Res</span>
+        </button>
+        <!-- Close Button -->
+        <button
+          id="lightbox-close-btn"
+          type="button"
+          class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-ivory-100 transition-colors"
+          title="Close Lightbox (Esc)"
+        >
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Stage with Prev/Next Controls -->
+    <div id="lightbox-stage" class="relative max-w-6xl max-h-[74vh] w-full flex items-center justify-center my-auto overflow-hidden">
+      <button
+        id="lightbox-prev-btn"
+        type="button"
+        aria-label="Previous Photograph"
+        class="absolute left-2 sm:left-4 z-20 p-3 rounded-full bg-emerald-950/80 hover:bg-champagne-500 text-ivory-100 hover:text-emerald-950 border border-champagne-400/40 transition-all shadow-xl"
+      >
+        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+      </button>
+
+      <img
+        id="lightbox-img"
+        src="assets/images/hero-couple.png"
+        alt="Enlarged wedding photograph"
+        class="max-h-[72vh] max-w-full object-contain rounded-xl shadow-2xl cursor-zoom-in select-none"
+      />
+
+      <button
+        id="lightbox-next-btn"
+        type="button"
+        aria-label="Next Photograph"
+        class="absolute right-2 sm:right-4 z-20 p-3 rounded-full bg-emerald-950/80 hover:bg-champagne-500 text-ivory-100 hover:text-emerald-950 border border-champagne-400/40 transition-all shadow-xl"
+      >
+        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Bottom Tip -->
+    <div class="text-center text-xs text-ivory-300/60 font-light">
+      Use <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-champagne-300 font-mono text-[10px]">←</kbd> <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-champagne-300 font-mono text-[10px]">→</kbd> arrow keys to browse • Click image to zoom • Press <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-champagne-300 font-mono text-[10px]">Esc</kbd> to close
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       6. GUESTBOOK & CONTINUOUS AUTO-SCROLLING MARQUEE CAROUSEL
+       ======================================================================== -->
+  <section id="wishes" class="py-28 bg-ivory-100 royal-pattern-light text-slate-800 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 mb-12">
+      <div class="text-center max-w-2xl mx-auto reveal-elem">
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-champagne-400/20 border border-champagne-400/40 text-champagne-700 text-[11px] uppercase tracking-widest font-semibold mb-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+          <span id="wish-count-badge">6 Live Blessings</span>
+        </div>
+        <h2 class="font-serif text-4xl sm:text-5xl font-normal text-emerald-950 mb-4">Guestbook &amp; Live Blessings</h2>
+        <div class="w-20 h-[1px] bg-champagne-400 mx-auto mb-4"></div>
+        <p class="font-sans text-sm text-slate-600 font-light mb-7">
+          Heartfelt blessings from our cherished family and friends. Hover over any card to pause the stream, tap ♥ to send love to a wish, or add your own blessing below.
+        </p>
+
+        <!-- Guestbook Actions & Filters -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
+          <button
+            type="button"
+            onclick="openWishDialog()"
+            class="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-emerald-950 text-champagne-300 hover:bg-champagne-500 hover:text-emerald-950 transition-all font-medium text-xs tracking-[0.2em] uppercase shadow-md"
+          >
+            <i data-lucide="pen-tool" class="w-4 h-4"></i>
+            <span>Add Your Blessing To The Stream</span>
+          </button>
+
+          <button
+            id="toggle-marquee-btn"
+            type="button"
+            class="inline-flex items-center space-x-1.5 px-4 py-3 rounded-full bg-white text-slate-700 hover:text-emerald-950 border border-champagne-300/70 text-xs uppercase tracking-widest transition-all shadow-sm"
+          >
+            <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+            <span>Pause Stream</span>
+          </button>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="inline-flex flex-wrap items-center justify-center gap-2 mt-2">
+          <button
+            type="button"
+            data-filter="all"
+            class="wish-filter-btn px-3.5 py-1.5 rounded-full text-[11px] uppercase tracking-wider font-medium border border-champagne-300/60 bg-emerald-950 text-champagne-300 transition-colors"
+          >
+            All Wishes
+          </button>
+          <button
+            type="button"
+            data-filter="family"
+            class="wish-filter-btn px-3.5 py-1.5 rounded-full text-[11px] uppercase tracking-wider font-medium border border-champagne-300/60 bg-white text-slate-600 hover:border-champagne-500 transition-colors"
+          >
+            Family
+          </button>
+          <button
+            type="button"
+            data-filter="friends"
+            class="wish-filter-btn px-3.5 py-1.5 rounded-full text-[11px] uppercase tracking-wider font-medium border border-champagne-300/60 bg-white text-slate-600 hover:border-champagne-500 transition-colors"
+          >
+            Friends &amp; Colleagues
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTINUOUS AUTO-SCROLLING MARQUEE CAROUSEL -->
+    <div class="marquee-container w-full overflow-hidden py-4 cursor-grab">
+      <div id="marquee-track" class="marquee-track space-x-6 px-6">
+        <!-- Dynamically populated and duplicated by js/app.js for a seamless infinite loop -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       7. FOOTER (STRICTLY INVITATION ONLY • NO RSVP FORM)
+       ======================================================================== -->
+  <footer class="bg-emerald-950 text-ivory-50 border-t border-champagne-500/25 py-16 text-center relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+      <div class="font-script text-5xl sm:text-6xl text-champagne-400 mb-3">Ananya &amp; Kabir</div>
+      <p class="font-sans text-xs uppercase tracking-[0.3em] text-ivory-200/75 mb-8">
+        December 11 – 12, 2026 • The Oberoi Udaivilas, Udaipur
+      </p>
+      <div class="w-16 h-[1px] bg-champagne-500/40 mx-auto mb-8"></div>
+      <p class="font-serif italic text-base sm:text-lg text-ivory-200/70 max-w-md mx-auto mb-8 leading-relaxed">
+        "Your presence is the greatest gift we could ever receive. Thank you for walking alongside our joy."
+      </p>
+
+      <div class="mt-4">
+        <a
+          href="#hero"
+          class="inline-flex items-center space-x-2 text-[11px] uppercase tracking-[0.25em] text-ivory-300/60 hover:text-champagne-400 transition-colors"
+        >
+          <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+          <span>Back to Top</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main Application Controller -->
+  <script src="js/app.js"></script>
+</body>
+</html>
