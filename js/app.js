@@ -209,79 +209,97 @@
   // 4. YOUTUBE BACKGROUND MUSIC (https://youtu.be/0_OvwPWMWYU)
   // =========================================================================
   const YT_VIDEO_ID = '0_OvwPWMWYU';
+  const ytIframeEl = document.getElementById('yt-bgm-player');
   let ytPlayer = null;
   let ytPlayerReady = false;
-  const unlockEvents = ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'];
+  let unmutedConfirmed = false;
+  const unlockEvents = [
+    'pointerdown',
+    'pointerup',
+    'touchstart',
+    'touchend',
+    'touchmove',
+    'click',
+    'keydown',
+    'scroll',
+  ];
+
+  // Direct low-latency postMessage helper (fires even before YT.Player API script finishes)
+  function sendYtCommand(func, args = []) {
+    if (ytIframeEl && ytIframeEl.contentWindow) {
+      try {
+        ytIframeEl.contentWindow.postMessage(
+          JSON.stringify({ event: 'command', func, args }),
+          '*'
+        );
+      } catch (_) {
+        // Ignore cross-origin transient state
+      }
+    }
+  }
 
   function tryStartUnmutedBgm() {
-    if (!ytPlayer || !ytPlayerReady) return;
-    try {
-      ytPlayer.unMute();
-      ytPlayer.setVolume(80);
-      ytPlayer.playVideo();
-    } catch (_) {
-      // Ignore transient player readiness errors
+    if (unmutedConfirmed) return;
+    sendYtCommand('unMute');
+    sendYtCommand('setVolume', [80]);
+    sendYtCommand('playVideo');
+
+    if (ytPlayer && ytPlayerReady) {
+      try {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(80);
+        ytPlayer.playVideo();
+      } catch (_) {
+        // Ignore transient player readiness errors
+      }
     }
   }
 
   function removeGestureUnlockListeners() {
     unlockEvents.forEach((evt) => {
+      window.removeEventListener(evt, tryStartUnmutedBgm, true);
       document.removeEventListener(evt, tryStartUnmutedBgm, true);
     });
   }
 
   unlockEvents.forEach((evt) => {
+    window.addEventListener(evt, tryStartUnmutedBgm, { capture: true, passive: true });
     document.addEventListener(evt, tryStartUnmutedBgm, { capture: true, passive: true });
   });
 
+  // Trigger immediate launch playback as soon as pre-embedded iframe finishes loading
+  if (ytIframeEl) {
+    ytIframeEl.addEventListener('load', () => {
+      tryStartUnmutedBgm();
+      setTimeout(tryStartUnmutedBgm, 250);
+      setTimeout(tryStartUnmutedBgm, 800);
+    });
+  }
+
   window.onYouTubeIframeAPIReady = function () {
-    const playerVars = {
-      autoplay: 1,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      iv_load_policy: 3,
-      loop: 1,
-      modestbranding: 1,
-      playlist: YT_VIDEO_ID,
-      playsinline: 1,
-      rel: 0,
-    };
-
-    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
-      playerVars.origin = window.location.origin;
-    }
-
     ytPlayer = new window.YT.Player('yt-bgm-player', {
-      width: '200',
-      height: '150',
-      videoId: YT_VIDEO_ID,
-      playerVars,
       events: {
         onReady: function (event) {
           ytPlayerReady = true;
-          const iframe = event.target.getIframe();
-          if (iframe) {
-            iframe.setAttribute('allow', 'autoplay; encrypted-media');
-            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-          }
 
-          // Attempt immediate unmuted playback
+          // Attempt immediate unmuted playback right on launch
           event.target.setVolume(80);
           event.target.unMute();
           event.target.playVideo();
 
-          // If browser autoplay policy blocked unmuted start, pre-start muted until first tap/click
+          // Check shortly after: if strict mobile OS policy blocked unmuted start,
+          // pre-buffer & stream muted so audio unmutes at 0ms on first scroll/touch
           setTimeout(() => {
-            if (
-              ytPlayer &&
-              typeof ytPlayer.getPlayerState === 'function' &&
-              ytPlayer.getPlayerState() !== window.YT.PlayerState.PLAYING
-            ) {
+            if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
+            const state = ytPlayer.getPlayerState();
+            if (state === window.YT.PlayerState.PLAYING && !ytPlayer.isMuted()) {
+              unmutedConfirmed = true;
+              removeGestureUnlockListeners();
+            } else if (state !== window.YT.PlayerState.PLAYING) {
               ytPlayer.mute();
               ytPlayer.playVideo();
             }
-          }, 700);
+          }, 600);
         },
         onStateChange: function (event) {
           if (event.data === window.YT.PlayerState.ENDED) {
@@ -293,6 +311,7 @@
             typeof ytPlayer.isMuted === 'function' &&
             !ytPlayer.isMuted()
           ) {
+            unmutedConfirmed = true;
             removeGestureUnlockListeners();
           }
         },
