@@ -1,5 +1,5 @@
 /**
- * Ananya & Kabir — The Royal Wedding Celebration
+ * Aswin & Athira — The Wedding Celebration at Kodanat Mana
  * Production Interactive Controller (Vanilla JS)
  */
 
@@ -52,47 +52,54 @@
   // =========================================================================
   const navbar = document.getElementById('navbar');
   const scrollProgress = document.getElementById('scroll-progress');
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('section[id]');
 
   function handleScroll() {
     const scrollY = window.scrollY;
 
-    // Navbar background transition
     if (navbar) {
-      if (scrollY > 60) {
+      if (scrollY > 50) {
         navbar.classList.add(
-          'bg-emerald-950/95',
-          'backdrop-blur-xl',
+          'lg:bg-emerald-950/95',
+          'lg:backdrop-blur-xl',
           'shadow-[0_10px_30px_rgba(0,0,0,0.45)]',
-          'py-3.5',
-          'border-b',
-          'border-champagne-500/20'
+          'py-2.5',
+          'lg:py-3.5',
+          'lg:border-champagne-500/20'
         );
-        navbar.classList.remove('py-5', 'bg-gradient-to-b', 'from-emerald-950/80', 'to-transparent');
+        navbar.classList.remove(
+          'py-3',
+          'lg:py-5',
+          'lg:bg-transparent',
+          'lg:backdrop-blur-none',
+          'lg:border-transparent'
+        );
       } else {
         navbar.classList.remove(
-          'bg-emerald-950/95',
-          'backdrop-blur-xl',
+          'lg:bg-emerald-950/95',
+          'lg:backdrop-blur-xl',
           'shadow-[0_10px_30px_rgba(0,0,0,0.45)]',
-          'py-3.5',
-          'border-b',
-          'border-champagne-500/20'
+          'py-2.5',
+          'lg:py-3.5',
+          'lg:border-champagne-500/20'
         );
-        navbar.classList.add('py-5', 'bg-gradient-to-b', 'from-emerald-950/80', 'to-transparent');
+        navbar.classList.add(
+          'py-3',
+          'lg:py-5',
+          'lg:bg-transparent',
+          'lg:backdrop-blur-none',
+          'lg:border-transparent'
+        );
       }
     }
 
-    // Top scroll progress bar
     if (scrollProgress) {
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollY / docHeight) * 100)) : 0;
       scrollProgress.style.width = `${pct}%`;
     }
 
-    // Active section scroll spy
     let currentSectionId = 'hero';
     sections.forEach((sec) => {
       const top = sec.offsetTop - 160;
@@ -114,44 +121,24 @@
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 
-  // Mobile Menu Drawer Toggle
-  if (mobileMenuBtn && mobileMenu) {
-    mobileMenuBtn.addEventListener('click', () => {
-      const isHidden = mobileMenu.classList.contains('hidden');
-      if (isHidden) {
-        mobileMenu.classList.remove('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', 'true');
-      } else {
-        mobileMenu.classList.add('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    mobileMenu.querySelectorAll('a, button').forEach((item) => {
-      item.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
   // =========================================================================
   // 2. INTERSECTION OBSERVER FOR SCROLL REVEALS
   // =========================================================================
-  const observerOptions = {
-    root: null,
-    threshold: 0.1,
-    rootMargin: '0px 0px -35px 0px',
-  };
-
-  const revealObserver = new IntersectionObserver((entries, obs) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
+  const revealObserver = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      root: null,
+      threshold: 0.1,
+      rootMargin: '0px 0px -35px 0px',
+    }
+  );
 
   document.querySelectorAll('.reveal-elem').forEach((el) => revealObserver.observe(el));
 
@@ -199,7 +186,6 @@
   }
   window.burstPetals = burstPetals;
 
-  // Initial subtle petals
   for (let i = 0; i < 6; i++) {
     setTimeout(() => createPetal(false), i * 300);
   }
@@ -211,117 +197,131 @@
       togglePetalsBtn.classList.toggle('opacity-50', !petalsEnabled);
       if (!petalsEnabled && petalsContainer) {
         petalsContainer.innerHTML = '';
-        showToast('Falling marigold & rose petals paused', 'Pause');
+        showToast('Falling marigold & jasmine petals paused', 'pause');
       } else {
         burstPetals(10);
-        showToast('Falling marigold & rose petals resumed', 'sparkles');
+        showToast('Falling marigold & jasmine petals resumed', 'sparkles');
       }
     });
   }
 
   // =========================================================================
-  // 4. WEB AUDIO API ROYAL AMBIENT CHIME / TANPURA HARMONIC SYNTHESIZER
+  // 4. YOUTUBE BACKGROUND MUSIC (https://youtu.be/0_OvwPWMWYU)
   // =========================================================================
-  const toggleAudioBtn = document.getElementById('toggle-audio-btn');
-  const audioLabel = document.getElementById('audio-label');
-  let audioCtx = null;
-  let isPlayingAudio = false;
-  let chimeInterval = null;
-  let masterGain = null;
+  const YT_VIDEO_ID = '0_OvwPWMWYU';
+  let ytPlayer = null;
+  let ytPlayerReady = false;
+  const unlockEvents = ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'];
 
-  // Raag Yaman / Royal Major Pentatonic frequencies (Hz)
-  const royalNotes = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25];
-
-  function playGentleChimeNote() {
-    if (!audioCtx || !isPlayingAudio || !masterGain) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const noteGain = audioCtx.createGain();
-
-    const freq = royalNotes[Math.floor(Math.random() * royalNotes.length)];
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, now);
-
-    noteGain.gain.setValueAtTime(0.0001, now);
-    noteGain.gain.exponentialRampToValueAtTime(0.035, now + 0.4);
-    noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.8);
-
-    osc.connect(noteGain);
-    noteGain.connect(masterGain);
-
-    osc.start(now);
-    osc.stop(now + 4.0);
-  }
-
-  function toggleAmbientAudio() {
-    if (!isPlayingAudio) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) {
-        showToast('Web Audio is not supported on this browser', 'volume-x');
-        return;
-      }
-      if (!audioCtx) {
-        audioCtx = new AudioContextClass();
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
-
-        // Warm low drone (Sa & Pa)
-        [130.81, 196.0].forEach((droneFreq) => {
-          const droneOsc = audioCtx.createOscillator();
-          const droneGain = audioCtx.createGain();
-          droneOsc.type = 'sine';
-          droneOsc.frequency.value = droneFreq;
-          droneGain.gain.value = 0.012;
-          droneOsc.connect(droneGain);
-          droneGain.connect(masterGain);
-          droneOsc.start();
-        });
-      }
-
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      isPlayingAudio = true;
-      if (masterGain) {
-        masterGain.gain.setTargetAtTime(0.6, audioCtx.currentTime, 0.3);
-      }
-      playGentleChimeNote();
-      chimeInterval = setInterval(playGentleChimeNote, 2400);
-
-      if (toggleAudioBtn) toggleAudioBtn.classList.add('playing', 'border-champagne-400');
-      if (audioLabel) audioLabel.textContent = 'Chimes On';
-      showToast('Royal Udaipur ambient chimes enabled', 'music');
-    } else {
-      isPlayingAudio = false;
-      if (chimeInterval) {
-        clearInterval(chimeInterval);
-        chimeInterval = null;
-      }
-      if (masterGain && audioCtx) {
-        masterGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.25);
-      }
-      if (toggleAudioBtn) toggleAudioBtn.classList.remove('playing', 'border-champagne-400');
-      if (audioLabel) audioLabel.textContent = 'Royal Audio';
-      showToast('Ambient chimes muted', 'volume-x');
+  function tryStartUnmutedBgm() {
+    if (!ytPlayer || !ytPlayerReady) return;
+    try {
+      ytPlayer.unMute();
+      ytPlayer.setVolume(80);
+      ytPlayer.playVideo();
+    } catch (_) {
+      // Ignore transient player readiness errors
     }
   }
 
-  if (toggleAudioBtn) {
-    toggleAudioBtn.addEventListener('click', toggleAmbientAudio);
+  function removeGestureUnlockListeners() {
+    unlockEvents.forEach((evt) => {
+      document.removeEventListener(evt, tryStartUnmutedBgm, true);
+    });
   }
 
-  // =========================================================================
-  // 5. REAL-TIME LUXURY COUNTDOWN TIMER
-  //    Target: Dec 11, 2026 10:30:00 IST (UTC+5:30)
-  // =========================================================================
-  let targetWeddingDate = new Date('2026-12-11T10:30:00+05:30').getTime();
+  unlockEvents.forEach((evt) => {
+    document.addEventListener(evt, tryStartUnmutedBgm, { capture: true, passive: true });
+  });
 
-  // Smart future fallback if ever viewed past Dec 11, 2026
+  window.onYouTubeIframeAPIReady = function () {
+    const playerVars = {
+      autoplay: 1,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      iv_load_policy: 3,
+      loop: 1,
+      modestbranding: 1,
+      playlist: YT_VIDEO_ID,
+      playsinline: 1,
+      rel: 0,
+    };
+
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      playerVars.origin = window.location.origin;
+    }
+
+    ytPlayer = new window.YT.Player('yt-bgm-player', {
+      width: '200',
+      height: '150',
+      videoId: YT_VIDEO_ID,
+      playerVars,
+      events: {
+        onReady: function (event) {
+          ytPlayerReady = true;
+          const iframe = event.target.getIframe();
+          if (iframe) {
+            iframe.setAttribute('allow', 'autoplay; encrypted-media');
+            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+          }
+
+          // Attempt immediate unmuted playback
+          event.target.setVolume(80);
+          event.target.unMute();
+          event.target.playVideo();
+
+          // If browser autoplay policy blocked unmuted start, pre-start muted until first tap/click
+          setTimeout(() => {
+            if (
+              ytPlayer &&
+              typeof ytPlayer.getPlayerState === 'function' &&
+              ytPlayer.getPlayerState() !== window.YT.PlayerState.PLAYING
+            ) {
+              ytPlayer.mute();
+              ytPlayer.playVideo();
+            }
+          }, 700);
+        },
+        onStateChange: function (event) {
+          if (event.data === window.YT.PlayerState.ENDED) {
+            event.target.seekTo(0);
+            event.target.playVideo();
+          } else if (
+            event.data === window.YT.PlayerState.PLAYING &&
+            ytPlayer &&
+            typeof ytPlayer.isMuted === 'function' &&
+            !ytPlayer.isMuted()
+          ) {
+            removeGestureUnlockListeners();
+          }
+        },
+      },
+    });
+  };
+
+  // Load YouTube IFrame Player API asynchronously
+  (function loadYouTubeApi() {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.async = true;
+    const firstScript = document.getElementsByTagName('script')[0];
+    if (firstScript && firstScript.parentNode) {
+      firstScript.parentNode.insertBefore(tag, firstScript);
+    } else {
+      document.head.appendChild(tag);
+    }
+  })();
+
+  // =========================================================================
+  // 5. REAL-TIME COUNTDOWN TIMER
+  //    Target: Dec 27, 2026 15:30:00 IST (UTC+5:30) — Celebrations Kickoff
+  // =========================================================================
+  let targetWeddingDate = new Date('2026-12-27T15:30:00+05:30').getTime();
+
   if (targetWeddingDate <= Date.now()) {
     const nextYear = new Date().getFullYear() + 1;
-    targetWeddingDate = new Date(`${nextYear}-12-11T10:30:00+05:30`).getTime();
+    targetWeddingDate = new Date(`${nextYear}-12-27T15:30:00+05:30`).getTime();
   }
 
   const daysEl = document.getElementById('timer-days');
@@ -352,176 +352,18 @@
   setInterval(updateCountdown, 1000);
 
   // =========================================================================
-  // 6. INTERACTIVE LOVE STORY TIMELINE CHAPTERS
+  // 6. SAVE THE DATE CALENDAR (.ICS) EXPORT & VENUE ADDRESS COPY
   // =========================================================================
-  const storyChapters = [
-    {
-      id: 'mumbai',
-      year: 'Monsoon 2021',
-      place: 'Kala Ghoda, South Mumbai',
-      title: 'A Serendipitous First Coffee',
-      quote:
-        'What began as taking shelter from a sudden Mumbai downpour over artisanal filter coffee turned into a four-hour conversation about architecture, old Bollywood classics, and our shared love for travelling off the beaten path.',
-      highlight: 'Chapter I • Where It All Began',
-    },
-    {
-      id: 'continents',
-      year: 'Autumn 2023',
-      place: 'London & Mumbai',
-      title: 'Stargazing Across Continents',
-      quote:
-        'Through time zones, late-night FaceTime dinners, and handwritten postcards tucked into carry-on luggage, distance only deepened our certainty that home was never a place—it was always each other.',
-      highlight: 'Chapter II • Love Across Miles',
-    },
-    {
-      id: 'proposal',
-      year: 'Winter 2025',
-      place: 'Lake Pichola, Udaipur',
-      title: 'Beneath A Thousand Floating Diyas',
-      quote:
-        'On a quiet boat gliding across Lake Pichola at twilight, Kabir asked the question that changed our lives forever. Surrounded by the golden reflection of Mewari palaces, Ananya said yes before the ring box even opened.',
-      highlight: 'Chapter III • The Forever Promise',
-    },
-    {
-      id: 'wedding',
-      year: 'December 11 – 12, 2026',
-      place: 'The Oberoi Udaivilas, Udaipur',
-      title: 'Stepping Into Our Sacred Union',
-      quote:
-        'Now, we return to the very lake where we promised forever—surrounded by the warmth, blessings, and joyful laughter of the family and friends who shaped our lives.',
-      highlight: 'Chapter IV • The Royal Celebration',
-    },
-  ];
-
-  const storyTabs = document.querySelectorAll('.story-tab-btn');
-  const storyTitleEl = document.getElementById('story-chapter-title');
-  const storyQuoteEl = document.getElementById('story-chapter-quote');
-  const storyMetaEl = document.getElementById('story-chapter-meta');
-  const storyBadgeEl = document.getElementById('story-chapter-badge');
-  const storyCardEl = document.getElementById('story-chapter-card');
-
-  storyTabs.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const chapterId = btn.getAttribute('data-chapter');
-      const chapter = storyChapters.find((c) => c.id === chapterId);
-      if (!chapter) return;
-
-      storyTabs.forEach((b) => {
-        b.classList.remove(
-          'bg-emerald-950',
-          'text-champagne-300',
-          'border-emerald-950',
-          'shadow-md'
-        );
-        b.classList.add('bg-white/80', 'text-slate-700', 'border-champagne-300/60');
-      });
-      btn.classList.remove('bg-white/80', 'text-slate-700', 'border-champagne-300/60');
-      btn.classList.add('bg-emerald-950', 'text-champagne-300', 'border-emerald-950', 'shadow-md');
-
-      if (storyCardEl) {
-        storyCardEl.style.opacity = '0.4';
-        storyCardEl.style.transform = 'translateY(6px)';
-        setTimeout(() => {
-          if (storyBadgeEl) storyBadgeEl.textContent = chapter.highlight;
-          if (storyTitleEl) storyTitleEl.textContent = chapter.title;
-          if (storyQuoteEl) storyQuoteEl.textContent = `"${chapter.quote}"`;
-          if (storyMetaEl) storyMetaEl.textContent = `${chapter.year} • ${chapter.place}`;
-          storyCardEl.style.opacity = '1';
-          storyCardEl.style.transform = 'translateY(0)';
-        }, 160);
-      }
-    });
-  });
-
-  // =========================================================================
-  // 7. CEREMONIES SCHEDULE FILTER, SWATCHES & CALENDAR (.ICS) EXPORT
-  // =========================================================================
-  const scheduleFilterBtns = document.querySelectorAll('.schedule-filter-btn');
-  const eventCards = document.querySelectorAll('.ceremony-card');
-
-  scheduleFilterBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const filter = btn.getAttribute('data-day');
-
-      scheduleFilterBtns.forEach((b) => {
-        b.classList.remove('bg-champagne-500', 'text-emerald-950', 'font-semibold', 'shadow-lg');
-        b.classList.add('bg-emerald-900/50', 'text-ivory-200', 'border-champagne-400/30');
-      });
-      btn.classList.remove('bg-emerald-900/50', 'text-ivory-200', 'border-champagne-400/30');
-      btn.classList.add('bg-champagne-500', 'text-emerald-950', 'font-semibold', 'shadow-lg');
-
-      eventCards.forEach((card) => {
-        const cardDay = card.getAttribute('data-day');
-        if (filter === 'all' || cardDay === filter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-    });
-  });
-
-  // Interactive Dress Code Swatch Preview
-  document.querySelectorAll('.swatch-pill').forEach((pill) => {
-    pill.addEventListener('click', () => {
-      const tipText = pill.getAttribute('data-tip');
-      const colorHex = pill.getAttribute('data-color');
-      const parentCard = pill.closest('.ceremony-card');
-      if (!parentCard) return;
-
-      parentCard.querySelectorAll('.swatch-pill').forEach((p) => p.classList.remove('active-swatch'));
-      pill.classList.add('active-swatch');
-
-      const tipBox = parentCard.querySelector('.swatch-tip-box');
-      const tipDot = parentCard.querySelector('.swatch-tip-dot');
-      const tipLabel = parentCard.querySelector('.swatch-tip-label');
-      if (tipBox && tipLabel) {
-        tipBox.classList.remove('hidden');
-        tipLabel.textContent = tipText;
-        if (tipDot && colorHex) {
-          tipDot.style.backgroundColor = colorHex;
-        }
-      }
-    });
-  });
-
-  // Add to Calendar (.ICS generator)
   const calendarEvents = {
     all: {
-      title: 'Ananya & Kabir — The Royal Wedding Celebration',
-      start: '20261211T050000Z',
-      end: '20261212T180000Z',
-      location: 'The Oberoi Udaivilas, Haridas Ji Ki Magri, Udaipur, Rajasthan 313001, India',
+      title: 'Aswin & Athira — The Wedding Celebration',
+      start: '20261227T100000Z',
+      end: '20261228T083000Z',
+      location:
+        'Kodanat Mana (150+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584, India',
       description:
-        'Celebration Itinerary at The Oberoi Udaivilas, Udaipur:\\n- Dec 11 (10:30 AM): The Haldi Utsav at The Marigold Courtyard\\n- Dec 11 (7:00 PM): The Grand Sangeet at Royal Grand Ballroom\\n- Dec 12 (4:30 PM): The Wedding Vows at Sunset Lakeside Promenade',
-      filename: 'Ananya-Kabir-Wedding-Udaipur.ics',
-    },
-    haldi: {
-      title: 'Ananya & Kabir — The Haldi Utsav',
-      start: '20261211T050000Z',
-      end: '20261211T083000Z',
-      location: 'The Marigold Courtyard, The Oberoi Udaivilas, Udaipur',
-      description:
-        'A vibrant morning of golden turmeric, marigold petals, and joyful blessings. Dress Code: Sunshine Yellow, Festive Mustard & Warm Marigold.',
-      filename: 'Ananya-Kabir-Haldi-Utsav.ics',
-    },
-    sangeet: {
-      title: 'Ananya & Kabir — The Grand Sangeet Gala',
-      start: '20261211T133000Z',
-      end: '20261211T183000Z',
-      location: 'Royal Grand Ballroom, The Oberoi Udaivilas, Udaipur',
-      description:
-        'An unforgettable evening gala beneath sparkling fairy lights featuring family dance battles and cocktails. Dress Code: Royal Emerald, Deep Sapphire & Metallic Gold.',
-      filename: 'Ananya-Kabir-Grand-Sangeet.ics',
-    },
-    wedding: {
-      title: 'Ananya & Kabir — Sacred Wedding Vows & Pheras',
-      start: '20261212T110000Z',
-      end: '20261212T180000Z',
-      location: 'Sunset Lakeside Promenade, The Oberoi Udaivilas, Udaipur',
-      description:
-        'Baraat (4:30 PM) followed by sacred Vedic Pheras at sunset (5:45 PM) overlooking Lake Pichola and Royal Dinner. Dress Code: Classic Ivory, Champagne Gold & Pastel Blush.',
-      filename: 'Ananya-Kabir-Wedding-Vows.ics',
+        'Celebration Itinerary at Kodanat Mana (150+ Year Old Traditional Kerala Mana):\\n- Sunday, Dec 27, 2026 (3:30 PM): The Haldi Ceremony (Outdoor Lawn • Color Code: Yellow)\\n- Sunday, Dec 27, 2026 (6:30 PM): The Grand Sangeeth (Outdoor Lawn • Color Code: Black)\\n- Monday, Dec 28, 2026 (Muhurtham starts from 10:00AM): The Wedding Ceremony (Inside Kodanat Mana • Dress Code: Traditional Wear)\\nNearest Railway Station: Guruvayur Railway Station\\nGoogle Maps: https://www.google.com/maps/place/Kodanat+Mana/data=!4m2!3m1!1s0x0:0x7e9172ab833b3dd6?sa=X&ved=1t:2428&ictx=111',
+      filename: 'Aswin-Athira-Wedding-Kodanat-Mana.ics',
     },
   };
 
@@ -530,11 +372,11 @@
     const icsContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//Ananya & Kabir Wedding//The Oberoi Udaivilas//EN',
+      'PRODID:-//Aswin & Athira Wedding//Kodanat Mana//EN',
       'CALSCALE:GREGORIAN',
       'METHOD:PUBLISH',
       'BEGIN:VEVENT',
-      `UID:${eventKey}-${Date.now()}@ananyakabirwedding.com`,
+      `UID:${eventKey}-${Date.now()}@aswinathirawedding.com`,
       `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
       `DTSTART:${ev.start}`,
       `DTEND:${ev.end}`,
@@ -562,121 +404,11 @@
 
   window.downloadCalendarEvent = downloadCalendarEvent;
 
-  // =========================================================================
-  // 8. INTERACTIVE DESTINATION VENUE PAVILION DIRECTORY
-  // =========================================================================
-  const pavilionData = {
-    marigold: {
-      badge: 'Pavilion I • Day 01 Morning',
-      locationLabel: 'The Marigold Courtyard • Udaivilas',
-      title: 'The Marigold Courtyard',
-      desc: 'An open-air Mewari sandstone courtyard framed by scalloped arches, fragrant frangipani trees, and cascading marigold tapestries for the Haldi Utsav.',
-      img: 'assets/images/haldi-utsav.png',
-      fallbackImg:
-        'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=85',
-      timing: 'Thursday, Dec 11, 2026 • 10:30 AM onwards',
-      attire: 'Sunshine Yellow, Festive Mustard & Warm Marigold',
-    },
-    ballroom: {
-      badge: 'Pavilion II • Day 01 Night',
-      locationLabel: 'Royal Grand Ballroom • Udaivilas',
-      title: 'Royal Grand Ballroom',
-      desc: 'Adorned with hand-cut Belgian crystal chandeliers, gilded domes, and an acoustic stage beneath a canopy of fairy lights for the Grand Sangeet night.',
-      img: 'assets/images/grand-sangeet.png',
-      fallbackImg:
-        'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85',
-      timing: 'Thursday, Dec 11, 2026 • 07:00 PM onwards',
-      attire: 'Royal Emerald, Deep Sapphire & Metallic Gold',
-    },
-    promenade: {
-      badge: 'Pavilion III • Day 02 Sunset',
-      locationLabel: 'Sunset Lakeside Promenade • Lake Pichola',
-      title: 'Sunset Lakeside Promenade',
-      desc: 'Overlooking the shimmering waters of Lake Pichola and the City Palace, where the sacred Vedic mandap glows with white roses, mogra, and brass diyas.',
-      img: 'assets/images/wedding-mandap.png',
-      fallbackImg:
-        'https://images.unsplash.com/photo-1545232972-907670f1f696?auto=format&fit=crop&w=1200&q=85',
-      timing: 'Friday, Dec 12, 2026 • Baraat 4:30 PM | Pheras 5:45 PM',
-      attire: 'Classic Ivory, Champagne Gold & Pastel Blush',
-    },
-    overview: {
-      badge: 'Official Wedding Venue',
-      locationLabel: 'Lake Pichola, Udaipur',
-      title: 'The Oberoi Udaivilas',
-      desc: 'Surrounded by Mewari domes, reflection pools, and 50 acres of historic royal grounds overlooking Lake Pichola.',
-      img: 'assets/images/udaivilas-palace.png',
-      fallbackImg:
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85',
-      timing: 'December 11 – 12, 2026 • Full Resort Buyout',
-      attire: '24/7 Royal Butler & Chauffeur Concierge Available',
-    },
-  };
-
-  const pavilionItems = document.querySelectorAll('.pavilion-card-btn');
-  const venueImg = document.getElementById('venue-showcase-img');
-  const venueBadge = document.getElementById('venue-showcase-badge');
-  const venueLocLabel = document.getElementById('venue-showcase-loc');
-  const venueTitle = document.getElementById('venue-showcase-title');
-  const venueDesc = document.getElementById('venue-showcase-desc');
-  const venueTiming = document.getElementById('venue-showcase-timing');
-
-  function selectPavilion(key) {
-    const data = pavilionData[key] || pavilionData.overview;
-
-    pavilionItems.forEach((item) => {
-      if (item.getAttribute('data-pavilion') === key) {
-        item.classList.add('ring-2', 'ring-champagne-500', 'bg-champagne-300/20');
-      } else {
-        item.classList.remove('ring-2', 'ring-champagne-500', 'bg-champagne-300/20');
-      }
-    });
-
-    if (venueImg) {
-      venueImg.style.opacity = '0.35';
-      setTimeout(() => {
-        venueImg.onerror = function () {
-          this.onerror = null;
-          this.src = data.fallbackImg;
-        };
-        venueImg.src = data.img;
-        venueImg.style.opacity = '1';
-      }, 150);
-    }
-    if (venueBadge) venueBadge.textContent = data.badge;
-    if (venueLocLabel) venueLocLabel.textContent = data.locationLabel;
-    if (venueTitle) venueTitle.textContent = data.title;
-    if (venueDesc) venueDesc.textContent = data.desc;
-    if (venueTiming) venueTiming.textContent = data.timing;
-  }
-
-  window.selectPavilion = selectPavilion;
-
-  pavilionItems.forEach((item) => {
-    item.addEventListener('click', () => {
-      const key = item.getAttribute('data-pavilion');
-      selectPavilion(key);
-    });
-  });
-
-  // Jump from schedule card to pavilion
-  document.querySelectorAll('.locate-pavilion-btn').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const key = btn.getAttribute('data-pavilion');
-      const venueSec = document.getElementById('venue');
-      if (venueSec) {
-        venueSec.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => selectPavilion(key), 450);
-      }
-    });
-  });
-
-  // Copy Venue Address Button
   const copyAddressBtn = document.getElementById('copy-address-btn');
   if (copyAddressBtn) {
     copyAddressBtn.addEventListener('click', () => {
       const addr =
-        'The Oberoi Udaivilas, Haridas Ji Ki Magri, Mulla Talai, Udaipur, Rajasthan 313001, India';
+        'Kodanat Mana (150+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584, India';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(addr).then(() => {
           showToast('Venue address copied to clipboard!', 'check-circle');
@@ -688,319 +420,64 @@
   }
 
   // =========================================================================
-  // 9. PHOTO GALLERY, CATEGORY FILTER, FULLSCREEN LIGHTBOX & DOWNLOAD
+  // 7. SUPABASE LIVE GUESTBOOK & MANUAL + AUTO-SCROLLING STREAM
   // =========================================================================
-  const galleryFilterBtns = document.querySelectorAll('.gallery-filter-btn');
-  const allGalleryItems = Array.from(document.querySelectorAll('.gallery-item'));
-  const lightboxModal = document.getElementById('lightbox-modal');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const lightboxTitle = document.getElementById('lightbox-title');
-  const lightboxDesc = document.getElementById('lightbox-desc');
-  const lightboxCategory = document.getElementById('lightbox-category');
-  const lightboxCounter = document.getElementById('lightbox-counter');
-  const lightboxDownloadBtn = document.getElementById('lightbox-download-btn');
-  const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
-  const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
-  const lightboxNextBtn = document.getElementById('lightbox-next-btn');
-  const lightboxZoomBtn = document.getElementById('lightbox-zoom-btn');
+  const SUPABASE_URL = 'https://puuloghcykkoqqpdnovq.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_XS6RPO9iFjv90G1NmpMOzA_b-E4M9cv';
 
-  let currentGalleryList = [...allGalleryItems];
-  let currentLightboxIndex = 0;
-
-  // Gallery Category Filter
-  galleryFilterBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const cat = btn.getAttribute('data-category');
-
-      galleryFilterBtns.forEach((b) => {
-        b.classList.remove('bg-champagne-500', 'text-emerald-950', 'font-semibold');
-        b.classList.add('bg-emerald-900/50', 'text-ivory-200', 'border-champagne-400/30');
-      });
-      btn.classList.remove('bg-emerald-900/50', 'text-ivory-200', 'border-champagne-400/30');
-      btn.classList.add('bg-champagne-500', 'text-emerald-950', 'font-semibold');
-
-      currentGalleryList = [];
-      allGalleryItems.forEach((item) => {
-        const itemCat = item.getAttribute('data-category');
-        if (cat === 'all' || itemCat === cat) {
-          item.classList.remove('hidden');
-          currentGalleryList.push(item);
-        } else {
-          item.classList.add('hidden');
-        }
-      });
-    });
-  });
-
-  // High-Res Image Download Handler
-  function triggerDownload(url, filename) {
-    showToast(`Preparing high-res download: ${filename}...`, 'download');
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.blob();
-      })
-      .then((blob) => {
-        const blobUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = blobUrl;
-        a.download = filename || 'Ananya-Kabir-Wedding.png';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(blobUrl);
-        a.remove();
-        showToast(`Downloaded ${filename}`, 'check-circle');
-      })
-      .catch(() => {
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.download = filename || 'Ananya-Kabir-Wedding.png';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      });
-  }
-
-  window.triggerDownload = triggerDownload;
-
-  function renderLightboxSlide(index) {
-    if (!currentGalleryList.length) return;
-    currentLightboxIndex = (index + currentGalleryList.length) % currentGalleryList.length;
-    const item = currentGalleryList[currentLightboxIndex];
-
-    const imgEl = item.querySelector('img');
-    const fullImgUrl = imgEl ? imgEl.currentSrc || imgEl.src : item.getAttribute('data-img');
-    const title = item.getAttribute('data-title') || 'Cherished Moment';
-    const desc = item.getAttribute('data-desc') || '';
-    const categoryLabel = item.getAttribute('data-badge') || 'Royal Gallery';
-
-    if (lightboxImg) {
-      lightboxImg.classList.remove('zoomed');
-      lightboxImg.style.opacity = '0.2';
-      setTimeout(() => {
-        lightboxImg.src = fullImgUrl;
-        lightboxImg.style.opacity = '1';
-      }, 100);
-    }
-    if (lightboxTitle) lightboxTitle.textContent = title;
-    if (lightboxDesc) lightboxDesc.textContent = desc;
-    if (lightboxCategory) lightboxCategory.textContent = categoryLabel;
-    if (lightboxCounter) {
-      lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentGalleryList.length}`;
-    }
-  }
-
-  function openLightboxAt(item) {
-    const idx = currentGalleryList.indexOf(item);
-    renderLightboxSlide(idx >= 0 ? idx : 0);
-
-    if (!lightboxModal) return;
-    lightboxModal.classList.remove('hidden');
-    lightboxModal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => {
-      lightboxModal.classList.add('opacity-100');
-      lightboxModal.classList.remove('opacity-0');
-    }, 15);
-  }
-
-  function closeLightbox() {
-    if (!lightboxModal) return;
-    lightboxModal.classList.remove('opacity-100');
-    lightboxModal.classList.add('opacity-0');
-    document.body.style.overflow = '';
-    setTimeout(() => {
-      lightboxModal.classList.add('hidden');
-      lightboxModal.classList.remove('flex');
-      if (lightboxImg) {
-        lightboxImg.classList.remove('zoomed');
-      }
-    }, 280);
-  }
-
-  allGalleryItems.forEach((item) => {
-    item.addEventListener('click', () => openLightboxAt(item));
-  });
-
-  if (lightboxPrevBtn) {
-    lightboxPrevBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      renderLightboxSlide(currentLightboxIndex - 1);
-    });
-  }
-
-  if (lightboxNextBtn) {
-    lightboxNextBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      renderLightboxSlide(currentLightboxIndex + 1);
-    });
-  }
-
-  if (lightboxZoomBtn && lightboxImg) {
-    lightboxZoomBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      lightboxImg.classList.toggle('zoomed');
-    });
-    lightboxImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      lightboxImg.classList.toggle('zoomed');
-    });
-  }
-
-  if (lightboxDownloadBtn) {
-    lightboxDownloadBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const item = currentGalleryList[currentLightboxIndex];
-      if (!item) return;
-      const imgEl = item.querySelector('img');
-      const url = imgEl ? imgEl.currentSrc || imgEl.src : item.getAttribute('data-img');
-      const title = item.getAttribute('data-title') || 'Ananya-Kabir-Moment';
-      const filename = `Ananya-Kabir-${title.replace(/\s+/g, '-')}.png`;
-      triggerDownload(url, filename);
-    });
-  }
-
-  if (lightboxCloseBtn) {
-    lightboxCloseBtn.addEventListener('click', closeLightbox);
-  }
-
-  if (lightboxModal) {
-    lightboxModal.addEventListener('click', (e) => {
-      if (e.target === lightboxModal || e.target.id === 'lightbox-stage') {
-        closeLightbox();
-      }
-    });
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (!lightboxModal || lightboxModal.classList.contains('hidden')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') renderLightboxSlide(currentLightboxIndex - 1);
-    if (e.key === 'ArrowRight') renderLightboxSlide(currentLightboxIndex + 1);
-  });
-
-  // =========================================================================
-  // 10. GUESTBOOK & SEAMLESS MARQUEE + DRAGGABLE "ADD A WISH" DIALOG
-  // =========================================================================
-  const STORAGE_KEY_WISHES = 'ananya_kabir_royal_wishes_v1';
-
-  const defaultWishes = [
-    {
-      id: 'w-1',
-      name: 'Devika & Arjun Singhania',
-      relation: "Bride's Family",
-      time: 'Just now',
-      message:
-        'Dearest Ananya & Kabir, may every sunset over Lake Pichola remind you both of how beautifully two souls can intertwine. Sending you all our prayers, warmth, and lifelong love!',
-      location: 'Udaipur, Rajasthan',
-      likes: 24,
-      isNew: false,
-    },
-    {
-      id: 'w-2',
-      name: 'Vikramaditya Roy',
-      relation: "Groom's Family",
-      time: '2 hours ago',
-      message:
-        "Kabir, you found your match in the most wonderful person! Can't wait to rock the dance floor at the Sangeet night. Wishing you guys eternal smiles and adventures ahead!",
-      location: 'Mumbai, India',
-      likes: 19,
-      isNew: false,
-    },
-    {
-      id: 'w-3',
-      name: 'Pooja & Kunal Shah',
-      relation: 'Friend of Couple',
-      time: 'Yesterday',
-      message:
-        'From college canteen debates to this glorious royal mandap—what an incredible love story to witness! Congratulations to the dream couple!',
-      location: 'New York, USA',
-      likes: 31,
-      isNew: false,
-    },
-    {
-      id: 'w-4',
-      name: 'Dr. Meenakshi & Rajesh Sharma',
-      relation: 'Well Wisher',
-      time: '2 days ago',
-      message:
-        'Sada Suhagan Raho! May the Almighty bestow boundless health, prosperity, and serene harmony upon your newly built home.',
-      location: 'New Delhi, India',
-      likes: 27,
-      isNew: false,
-    },
-    {
-      id: 'w-5',
-      name: 'Aditi & Siddharth Varma',
-      relation: "Groom's Family",
-      time: '3 days ago',
-      message:
-        'Witnessing the warmth and respect you share is inspiring. Here is to a lifetime of adventures and joyful sunsets at Udaipur!',
-      location: 'London, UK',
-      likes: 18,
-      isNew: false,
-    },
-    {
-      id: 'w-6',
-      name: 'Rohan & Tanya Mehra',
-      relation: 'Friend of Couple',
-      time: '4 days ago',
-      message:
-        'Ananya, you make the most stunning bride Kabir could ever dream of! Cannot wait for the royal celebrations at Udaivilas.',
-      location: 'Bengaluru, India',
-      likes: 22,
-      isNew: false,
-    },
-  ];
+  const SUPABASE_HEADERS = {
+    apikey: SUPABASE_PUBLISHABLE_KEY,
+    Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+    'Content-Type': 'application/json',
+  };
 
   let wishesData = [];
-  let currentWishFilter = 'all';
+  let isLoadingWishes = true;
+  const sessionNewWishIds = new Set();
 
-  function loadWishes() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY_WISHES);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          wishesData = parsed;
-          return;
-        }
-      }
-    } catch (_) {
-      // ignore storage errors
-    }
-    wishesData = [...defaultWishes];
+  function formatRelativeTime(isoDateStr) {
+    if (!isoDateStr) return 'Recently';
+    const createdMs = new Date(isoDateStr).getTime();
+    if (Number.isNaN(createdMs)) return 'Recently';
+
+    const diffSec = Math.max(0, Math.floor((Date.now() - createdMs) / 1000));
+    if (diffSec < 60) return 'Just now';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} min${diffMin === 1 ? '' : 's'} ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr} hour${diffHr === 1 ? '' : 's'} ago`;
+    const diffDay = Math.floor(diffHr / 24);
+    if (diffDay === 1) return 'Yesterday';
+    if (diffDay < 14) return `${diffDay} days ago`;
+
+    return new Date(createdMs).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
   }
 
-  function saveWishes() {
-    try {
-      localStorage.setItem(STORAGE_KEY_WISHES, JSON.stringify(wishesData));
-    } catch (_) {
-      // ignore storage errors
-    }
-  }
-
+  const marqueeContainer = document.getElementById('marquee-container');
   const marqueeTrack = document.getElementById('marquee-track');
   const wishCountBadge = document.getElementById('wish-count-badge');
-  const toggleMarqueeBtn = document.getElementById('toggle-marquee-btn');
 
   function createWishCardHtml(w) {
-    const borderClass = w.isNew
+    const isNew = sessionNewWishIds.has(Number(w.id));
+    const borderClass = isNew
       ? 'border-2 border-champagne-500 ring-4 ring-champagne-400/15'
       : 'border border-champagne-300/60';
-    const timeBadge = w.isNew
+    const timeLabel = formatRelativeTime(w.created_at);
+    const timeBadge = isNew
       ? `<span class="text-[10px] text-emerald-800 font-semibold px-2.5 py-0.5 bg-emerald-50 rounded-full border border-emerald-200">Just added</span>`
-      : `<span class="text-[10px] text-slate-400 font-light">${escapeHtml(w.time)}</span>`;
+      : `<span class="text-[10px] text-slate-400 font-light">${escapeHtml(timeLabel)}</span>`;
 
     return `
-      <article class="w-80 sm:w-96 flex-shrink-0 bg-white p-6 rounded-2xl ${borderClass} shadow-md hover:shadow-xl transition-all duration-300 hover:border-champagne-500 flex flex-col justify-between">
+      <article class="w-[82vw] max-w-[330px] sm:w-96 sm:max-w-none flex-shrink-0 bg-white p-5 sm:p-6 rounded-2xl ${borderClass} shadow-md hover:shadow-xl transition-all duration-300 hover:border-champagne-500 flex flex-col justify-between select-none">
         <div>
           <div class="flex items-start justify-between mb-3 gap-2">
             <div>
               <h5 class="font-serif text-lg font-semibold text-emerald-950 leading-snug">${escapeHtml(w.name)}</h5>
-              <span class="text-[10px] uppercase tracking-wider text-champagne-600 font-sans font-semibold">${escapeHtml(w.relation)}</span>
+              <span class="text-[10px] uppercase tracking-wider text-champagne-600 font-sans font-semibold">${escapeHtml(w.relation || 'Well Wisher')}</span>
             </div>
             ${timeBadge}
           </div>
@@ -1010,12 +487,12 @@
         </div>
         <div class="flex items-center justify-between pt-3 border-t border-ivory-200">
           <div class="text-[11px] text-champagne-600 flex items-center gap-1.5 font-sans font-medium">
-            <span>✨ ${escapeHtml(w.location || 'Royal Guestbook')}</span>
+            <span>✨ ${escapeHtml(w.location || 'Wedding Guestbook')}</span>
           </div>
           <button
             type="button"
-            data-like-id="${escapeHtml(w.id)}"
-            class="wish-like-btn inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-ivory-100 hover:bg-roseGold-300/30 text-slate-600 hover:text-emerald-950 border border-champagne-300/50 text-[11px] transition-all"
+            data-like-id="${escapeHtml(String(w.id))}"
+            class="wish-like-btn inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-ivory-100 hover:bg-roseGold-300/30 text-slate-600 hover:text-emerald-950 border border-champagne-300/50 text-[11px] transition-all cursor-pointer"
             title="Send love to this blessing"
           >
             <span class="text-rose-500">♥</span>
@@ -1029,79 +506,226 @@
   function renderWishesMarquee() {
     if (!marqueeTrack) return;
 
-    const filtered = wishesData.filter((w) => {
-      if (currentWishFilter === 'all') return true;
-      if (currentWishFilter === 'family') {
-        return w.relation.toLowerCase().includes('family');
-      }
-      if (currentWishFilter === 'friends') {
-        return w.relation.toLowerCase().includes('friend');
-      }
-      return true;
-    });
-
-    if (wishCountBadge) {
-      wishCountBadge.textContent = `${wishesData.length} Live Blessings`;
+    if (isLoadingWishes) {
+      if (wishCountBadge) wishCountBadge.textContent = 'Loading Blessings...';
+      marqueeTrack.innerHTML = `
+        <div class="w-[86vw] max-w-md mx-auto bg-white/80 p-6 rounded-2xl border border-champagne-300/60 text-center text-slate-500 text-sm font-serif italic">
+          Loading heartfelt blessings...
+        </div>
+      `;
+      return;
     }
 
-    // Duplicate the cards twice so translateX(-50%) creates a seamless infinite loop
-    const cardsHtml = filtered.map(createWishCardHtml).join('');
-    marqueeTrack.innerHTML = cardsHtml + cardsHtml;
+    if (wishCountBadge) {
+      wishCountBadge.textContent = `${wishesData.length} Live Blessing${wishesData.length === 1 ? '' : 's'}`;
+    }
+
+    if (wishesData.length === 0) {
+      marqueeTrack.innerHTML = `
+        <div class="w-[88vw] max-w-md mx-auto bg-white p-7 rounded-2xl border border-champagne-300/70 shadow-md text-center">
+          <p class="font-serif italic text-lg text-emerald-950 mb-1">Be the first to bless Aswin &amp; Athira ✨</p>
+          <p class="text-xs text-slate-500 font-light">Tap "Add Your Blessing To The Stream" above to share your warm wishes.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Repeat the set an even number of times (>= 2) so halfWidth seamless wrap always aligns
+    const minCopies = Math.max(2, Math.ceil(6 / wishesData.length));
+    const evenCopies = minCopies % 2 === 0 ? minCopies : minCopies + 1;
+    const singleSetHtml = wishesData.map(createWishCardHtml).join('');
+    marqueeTrack.innerHTML = singleSetHtml.repeat(evenCopies);
   }
 
-  loadWishes();
-  renderWishesMarquee();
+  async function fetchWishesFromSupabase(preserveScroll = false) {
+    try {
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/wishes?select=id,name,relation,location,message,likes,created_at&order=created_at.desc&limit=60`,
+        {
+          method: 'GET',
+          headers: SUPABASE_HEADERS,
+        }
+      );
 
-  // Delegate Heart / Like reaction clicks inside marquee
-  if (marqueeTrack) {
-    marqueeTrack.addEventListener('click', (e) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch wishes (${response.status})`);
+      }
+
+      const rows = await response.json();
+      wishesData = Array.isArray(rows) ? rows : [];
+      isLoadingWishes = false;
+
+      const prevScroll = preserveScroll && marqueeContainer ? marqueeContainer.scrollLeft : 0;
+      renderWishesMarquee();
+      if (preserveScroll && marqueeContainer) {
+        marqueeContainer.scrollLeft = prevScroll;
+      }
+    } catch (err) {
+      console.error('Supabase fetch wishes error:', err);
+      isLoadingWishes = false;
+      renderWishesMarquee();
+    }
+  }
+
+  renderWishesMarquee();
+  fetchWishesFromSupabase(false);
+
+  // Refresh live blessings periodically when tab is visible
+  setInterval(() => {
+    if (document.visibilityState === 'visible') {
+      fetchWishesFromSupabase(true);
+    }
+  }, 30000);
+
+  // Interactive Manual Scroll + Smooth Continuous Glide
+  if (marqueeContainer && marqueeTrack) {
+    let isHovered = false;
+    let isPointerDragging = false;
+    let hasDragged = false;
+    let startPageX = 0;
+    let startScrollLeft = 0;
+    let manualCooldownUntil = 0;
+    let scrollAccumulator = 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function normalizeInfiniteScroll() {
+      if (wishesData.length === 0) return;
+      const halfWidth = marqueeTrack.scrollWidth / 2;
+      if (halfWidth <= 0) return;
+      if (marqueeContainer.scrollLeft >= halfWidth) {
+        marqueeContainer.scrollLeft -= halfWidth;
+      } else if (marqueeContainer.scrollLeft <= 0 && isPointerDragging) {
+        marqueeContainer.scrollLeft += halfWidth;
+      }
+    }
+
+    function autoGlideStep() {
+      if (
+        wishesData.length > 0 &&
+        !prefersReducedMotion &&
+        !isHovered &&
+        !isPointerDragging &&
+        Date.now() > manualCooldownUntil
+      ) {
+        scrollAccumulator += 0.55;
+        if (scrollAccumulator >= 1) {
+          const delta = Math.floor(scrollAccumulator);
+          scrollAccumulator -= delta;
+          marqueeContainer.scrollLeft += delta;
+          normalizeInfiniteScroll();
+        }
+      }
+      requestAnimationFrame(autoGlideStep);
+    }
+
+    requestAnimationFrame(autoGlideStep);
+
+    marqueeContainer.addEventListener('mouseenter', () => {
+      isHovered = true;
+    });
+    marqueeContainer.addEventListener('mouseleave', () => {
+      isHovered = false;
+      if (isPointerDragging) {
+        isPointerDragging = false;
+        marqueeContainer.classList.remove('is-dragging');
+      }
+    });
+
+    marqueeContainer.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button')) return;
+      isPointerDragging = true;
+      hasDragged = false;
+      startPageX = e.pageX;
+      startScrollLeft = marqueeContainer.scrollLeft;
+      marqueeContainer.classList.add('is-dragging');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isPointerDragging) return;
+      const walk = e.pageX - startPageX;
+      if (Math.abs(walk) > 4) hasDragged = true;
+      marqueeContainer.scrollLeft = startScrollLeft - walk;
+      normalizeInfiniteScroll();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isPointerDragging) {
+        isPointerDragging = false;
+        marqueeContainer.classList.remove('is-dragging');
+        manualCooldownUntil = Date.now() + 900;
+      }
+    });
+
+    marqueeContainer.addEventListener(
+      'touchstart',
+      () => {
+        manualCooldownUntil = Date.now() + 2000;
+      },
+      { passive: true }
+    );
+    marqueeContainer.addEventListener(
+      'touchmove',
+      () => {
+        manualCooldownUntil = Date.now() + 2000;
+        normalizeInfiniteScroll();
+      },
+      { passive: true }
+    );
+    marqueeContainer.addEventListener(
+      'wheel',
+      () => {
+        manualCooldownUntil = Date.now() + 1400;
+        normalizeInfiniteScroll();
+      },
+      { passive: true }
+    );
+
+    marqueeTrack.addEventListener('click', async (e) => {
+      if (hasDragged) {
+        hasDragged = false;
+        return;
+      }
       const btn = e.target.closest('.wish-like-btn');
       if (!btn) return;
-      const wishId = btn.getAttribute('data-like-id');
-      const targetWish = wishesData.find((w) => w.id === wishId);
-      if (targetWish) {
-        targetWish.likes = (targetWish.likes || 1) + 1;
-        saveWishes();
-        renderWishesMarquee();
-        showToast(`Sent love to ${targetWish.name}'s blessing ♥`, 'heart');
+      const wishId = Number(btn.getAttribute('data-like-id'));
+      const targetWish = wishesData.find((w) => Number(w.id) === wishId);
+      if (!targetWish) return;
+
+      // Optimistic UI update
+      targetWish.likes = Number(targetWish.likes || 1) + 1;
+      const prevScroll = marqueeContainer.scrollLeft;
+      renderWishesMarquee();
+      marqueeContainer.scrollLeft = prevScroll;
+      showToast(`Sent love to ${targetWish.name}'s blessing ♥`, 'heart');
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_wish_likes`, {
+          method: 'POST',
+          headers: SUPABASE_HEADERS,
+          body: JSON.stringify({ target_wish_id: wishId }),
+        });
+        if (res.ok) {
+          const authoritativeLikes = await res.json();
+          if (typeof authoritativeLikes === 'number' && authoritativeLikes > 0) {
+            targetWish.likes = authoritativeLikes;
+            const curScroll = marqueeContainer.scrollLeft;
+            renderWishesMarquee();
+            marqueeContainer.scrollLeft = curScroll;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to increment wish likes:', err);
       }
     });
   }
 
-  // Guestbook Filter Buttons
-  document.querySelectorAll('.wish-filter-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentWishFilter = btn.getAttribute('data-filter') || 'all';
-      document.querySelectorAll('.wish-filter-btn').forEach((b) => {
-        b.classList.remove('bg-emerald-950', 'text-champagne-300');
-        b.classList.add('bg-white', 'text-slate-600');
-      });
-      btn.classList.remove('bg-white', 'text-slate-600');
-      btn.classList.add('bg-emerald-950', 'text-champagne-300');
-      renderWishesMarquee();
-    });
-  });
-
-  // Pause / Resume Marquee Stream Button
-  let marqueePaused = false;
-  if (toggleMarqueeBtn && marqueeTrack) {
-    toggleMarqueeBtn.addEventListener('click', () => {
-      marqueePaused = !marqueePaused;
-      marqueeTrack.classList.toggle('paused', marqueePaused);
-      toggleMarqueeBtn.innerHTML = marqueePaused
-        ? '<i class="w-3.5 h-3.5" data-lucide="play"></i><span>Resume Stream</span>'
-        : '<i class="w-3.5 h-3.5" data-lucide="pause"></i><span>Pause Stream</span>';
-      refreshIcons();
-    });
-  }
-
   // =========================================================================
-  // 11. DRAGGABLE & MINIMIZABLE FLOATING "ADD A WISH" DIALOG
+  // 8. DRAGGABLE & MOBILE-CENTERED "SEND BLESSING" DIALOG
   // =========================================================================
   const wishDialog = document.getElementById('draggable-wish-dialog');
+  const wishBackdrop = document.getElementById('wish-modal-backdrop');
   const dialogHeader = document.getElementById('dialog-header');
   const dialogBody = document.getElementById('dialog-body');
-  const openWishDialogBtn = document.getElementById('open-wish-dialog-btn');
   const closeWishDialogBtn = document.getElementById('close-wish-dialog-btn');
   const minimizeDialogBtn = document.getElementById('minimize-dialog-btn');
   const dialogWishForm = document.getElementById('dialog-wish-form');
@@ -1109,36 +733,80 @@
 
   let isMinimized = false;
 
-  function openWishDialog() {
+  function clearMobileDialogInlinePos() {
     if (!wishDialog) return;
-    wishDialog.classList.remove('hidden');
+    if (window.innerWidth < 640) {
+      wishDialog.style.left = '';
+      wishDialog.style.top = '';
+      wishDialog.style.right = '';
+      wishDialog.style.bottom = '';
+    }
+  }
+
+  window.addEventListener('resize', clearMobileDialogInlinePos);
+
+  function openWishDialog(e) {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
+    if (!wishDialog) return;
+
+    clearMobileDialogInlinePos();
+
     if (isMinimized && dialogBody) {
       isMinimized = false;
       dialogBody.classList.remove('hidden');
     }
-    setTimeout(() => {
-      wishDialog.classList.remove('opacity-0', 'scale-95');
-      wishDialog.classList.add('opacity-100', 'scale-100');
+
+    if (wishBackdrop) {
+      wishBackdrop.classList.remove('hidden');
+      void wishBackdrop.offsetWidth;
+      wishBackdrop.classList.add('is-open');
+    }
+
+    wishDialog.classList.remove('hidden');
+    void wishDialog.offsetWidth;
+    wishDialog.classList.add('is-open');
+
+    if (window.innerWidth >= 640) {
       const nameInput = document.getElementById('dlg-name');
       if (nameInput) nameInput.focus();
-    }, 15);
+    }
   }
 
   function closeWishDialog() {
     if (!wishDialog) return;
-    wishDialog.classList.remove('opacity-100', 'scale-100');
-    wishDialog.classList.add('opacity-0', 'scale-95');
+    wishDialog.classList.remove('is-open');
+    if (wishBackdrop) {
+      wishBackdrop.classList.remove('is-open');
+    }
+
     setTimeout(() => {
-      wishDialog.classList.add('hidden');
-    }, 280);
+      if (!wishDialog.classList.contains('is-open')) {
+        wishDialog.classList.add('hidden');
+        if (wishBackdrop) wishBackdrop.classList.add('hidden');
+      }
+    }, 230);
   }
 
   window.openWishDialog = openWishDialog;
   window.closeWishDialog = closeWishDialog;
 
-  if (openWishDialogBtn) {
-    openWishDialogBtn.addEventListener('click', openWishDialog);
+  document.querySelectorAll('[data-open-wish]').forEach((btn) => {
+    btn.removeAttribute('onclick');
+    btn.addEventListener('click', openWishDialog);
+  });
+
+  if (wishBackdrop) {
+    wishBackdrop.addEventListener('click', closeWishDialog);
   }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && wishDialog && !wishDialog.classList.contains('hidden')) {
+      closeWishDialog();
+    }
+  });
+
   if (closeWishDialogBtn) {
     closeWishDialogBtn.addEventListener('click', closeWishDialog);
   }
@@ -1166,7 +834,7 @@
     });
   });
 
-  // Mouse & Touch Drag Implementation
+  // Mouse & Touch Drag Implementation (Desktop >= 640px)
   let isDragging = false;
   let startX = 0;
   let startY = 0;
@@ -1175,7 +843,7 @@
 
   if (dialogHeader && wishDialog) {
     dialogHeader.addEventListener('mousedown', (e) => {
-      if (e.target.closest('button')) return;
+      if (window.innerWidth < 640 || e.target.closest('button')) return;
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
@@ -1212,11 +880,10 @@
       }
     });
 
-    // Touch Drag Support
     dialogHeader.addEventListener(
       'touchstart',
       (e) => {
-        if (e.target.closest('button')) return;
+        if (window.innerWidth < 640 || e.target.closest('button')) return;
         const touch = e.touches[0];
         isDragging = true;
         startX = touch.clientX;
@@ -1255,65 +922,113 @@
       }
     });
 
-    // Double-click header to reset position
     dialogHeader.addEventListener('dblclick', () => {
-      wishDialog.style.left = 'auto';
-      wishDialog.style.top = '14%';
-      wishDialog.style.right = '4%';
+      if (window.innerWidth < 640) return;
+      wishDialog.style.left = '';
+      wishDialog.style.top = '';
+      wishDialog.style.right = '';
+      wishDialog.style.bottom = '';
     });
   }
 
-  // Handle New Blessing Submission
+  // Handle New Blessing Submission -> Inserts Directly into Supabase `public.wishes`
+  let isSubmittingWish = false;
   if (dialogWishForm) {
-    dialogWishForm.addEventListener('submit', (e) => {
+    dialogWishForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isSubmittingWish) return;
+
       const nameInput = document.getElementById('dlg-name');
       const relationInput = document.getElementById('dlg-relationship');
       const locationInput = document.getElementById('dlg-location');
       const messageInput = document.getElementById('dlg-message');
+      const submitBtn = dialogWishForm.querySelector('button[type="submit"]');
 
       const name = nameInput ? nameInput.value.trim() : '';
       const relation = relationInput ? relationInput.value : 'Friend of Couple';
       const location =
         locationInput && locationInput.value.trim()
           ? locationInput.value.trim()
-          : 'New Blessing Posted';
+          : 'Wedding Guestbook';
       const message = messageInput ? messageInput.value.trim() : '';
 
       if (!name || !message) return;
 
-      const newWish = {
-        id: `w-${Date.now()}`,
-        name,
-        relation,
-        time: 'Just added',
-        message,
-        location,
-        likes: 1,
-        isNew: true,
-      };
+      isSubmittingWish = true;
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-wait');
+        submitBtn.innerHTML = '<span>Posting Blessing...</span>';
+      }
 
-      wishesData.unshift(newWish);
-      currentWishFilter = 'all';
-      saveWishes();
-      renderWishesMarquee();
-      burstPetals(20);
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/wishes`, {
+          method: 'POST',
+          headers: {
+            ...SUPABASE_HEADERS,
+            Prefer: 'return=representation',
+          },
+          body: JSON.stringify({
+            name,
+            relation,
+            location,
+            message,
+          }),
+        });
 
-      if (dlgSuccessMsg) dlgSuccessMsg.classList.remove('hidden');
-      dialogWishForm.reset();
-      showToast(`Thank you, ${name}! Your blessing is now live.`, 'sparkles');
-
-      setTimeout(() => {
-        if (dlgSuccessMsg) dlgSuccessMsg.classList.add('hidden');
-        closeWishDialog();
-        const wishesSection = document.getElementById('wishes');
-        if (wishesSection) {
-          wishesSection.scrollIntoView({ behavior: 'smooth' });
+        if (!res.ok) {
+          throw new Error(`Failed to save blessing (${res.status})`);
         }
-      }, 1800);
+
+        const insertedRows = await res.json();
+        const savedRow =
+          Array.isArray(insertedRows) && insertedRows[0]
+            ? insertedRows[0]
+            : {
+                id: Date.now(),
+                name,
+                relation,
+                location,
+                message,
+                likes: 1,
+                created_at: new Date().toISOString(),
+              };
+
+        sessionNewWishIds.add(Number(savedRow.id));
+        wishesData.unshift(savedRow);
+        renderWishesMarquee();
+        if (marqueeContainer) {
+          marqueeContainer.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+        burstPetals(20);
+
+        if (dlgSuccessMsg) dlgSuccessMsg.classList.remove('hidden');
+        dialogWishForm.reset();
+        showToast(`Thank you, ${name}! Your blessing is now live.`, 'sparkles');
+
+        setTimeout(() => {
+          if (dlgSuccessMsg) dlgSuccessMsg.classList.add('hidden');
+          closeWishDialog();
+          const wishesSection = document.getElementById('wishes');
+          if (wishesSection) {
+            wishesSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 1600);
+      } catch (err) {
+        console.error('Supabase insert wish error:', err);
+        showToast('Could not post blessing. Please check your internet connection.', 'alert-circle');
+      } finally {
+        isSubmittingWish = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-wait');
+          submitBtn.innerHTML = originalBtnHtml;
+          refreshIcons();
+        }
+      }
     });
   }
 
-  // Initialize icons on load
   refreshIcons();
 })();
