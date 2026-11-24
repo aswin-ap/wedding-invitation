@@ -10,13 +10,13 @@
   <meta property="og:url" content="https://aswin-and-athira.netlify.app/" />
   <meta property="og:title" content="Aswin &amp; Athira — The Wedding Celebration | Dec 27–28, 2026" />
   <meta property="og:description" content="With great joy, we invite you to celebrate our sacred wedding union at Kodanat Mana, Thrissur, Kerala." />
-  <meta property="og:image" content="https://aswin-and-athira.netlify.app/assets/images/og-preview.jpg" />
+  <meta property="og:image" content="https://aswin-and-athira.netlify.app/assets/images/og-preview.jpg?v=4k2" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="675" />
 
   <!-- Preload 4K UHD Couple Hero Portraits for Instant Mobile & Desktop Render -->
-  <link rel="preload" as="image" href="assets/images/hero-couple.jpg?v=4k" media="(max-width: 767px)" />
-  <link rel="preload" as="image" href="assets/images/hero-couple-4k-desktop.jpg?v=4k" media="(min-width: 768px)" />
+  <link rel="preload" as="image" href="assets/images/hero-couple.jpg?v=4k3" media="(max-width: 767px)" />
+  <link rel="preload" as="image" href="assets/images/hero-couple-4k-desktop.jpg?v=4k3" media="(min-width: 768px)" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -314,15 +314,15 @@
        ======================================================================== -->
   <section
     id="hero"
-    class="relative min-h-screen min-h-[100svh] flex items-end justify-center overflow-hidden bg-emerald-950 text-ivory-50 pt-[19.5rem] sm:pt-72 md:pt-[max(18.5rem,34vh)] pb-10 sm:pb-12"
+    class="relative min-h-screen min-h-[100svh] flex items-start md:items-end justify-center overflow-hidden bg-emerald-950 text-ivory-50 pt-[17.25rem] md:pt-[max(19rem,35vh)] pb-10 sm:pb-12"
   >
-    <!-- Hero Couple Portrait Backdrop (4K UHD Restored Original Photo — Mobile 2544x3792 & Desktop 3840x2160) -->
-    <div class="absolute inset-x-0 bottom-0 top-14 sm:top-16 md:top-10 lg:top-8 z-0 overflow-hidden">
+    <!-- Hero Couple Portrait Backdrop (4K UHD Restored Photo — Shifted Up on Mobile for Clear Face Window) -->
+    <div class="absolute inset-x-0 top-3 h-[660px] md:inset-0 md:h-auto z-0 overflow-hidden">
       <picture class="block w-full h-full">
-        <source media="(min-width: 768px)" srcset="assets/images/hero-couple-4k-desktop.jpg?v=4k" />
+        <source media="(min-width: 768px)" srcset="assets/images/hero-couple-4k-desktop.jpg?v=4k3" />
         <img
           id="hero-bg-img"
-          src="assets/images/hero-couple.jpg?v=4k"
+          src="assets/images/hero-couple.jpg?v=4k3"
           alt="Aswin and Athira Wedding Portrait"
           fetchpriority="high"
           decoding="async"
@@ -692,7 +692,7 @@
             <div class="w-12 sm:w-14 h-[1px] bg-champagne-400 my-4 sm:my-5"></div>
 
             <p class="font-serif text-lg sm:text-xl text-slate-700 font-light leading-relaxed mb-6 sm:mb-7">
-              A historic <strong class="text-emerald-950 font-medium">150+ year old traditional Kerala Mana</strong> nestled amidst serene greenery and timeless wooden architecture, <strong class="text-emerald-950 font-medium">Kodanat Mana</strong> welcomes you for all our wedding celebrations.
+              A historic <strong class="text-emerald-950 font-medium">160+ year old traditional Kerala Mana</strong> nestled amidst serene greenery and timeless wooden architecture, <strong class="text-emerald-950 font-medium">Kodanat Mana</strong> welcomes you for all our wedding celebrations.
             </p>
 
             <!-- Essential Details List -->
@@ -701,7 +701,7 @@
                 <div class="flex items-start space-x-2.5 sm:space-x-3">
                   <i data-lucide="map" class="w-4 h-4 text-champagne-600 mt-0.5 flex-shrink-0"></i>
                   <div class="font-light leading-relaxed">
-                    <span class="font-medium text-emerald-950">Kodanat Mana</span> (150+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584
+                    <span class="font-medium text-emerald-950">Kodanat Mana</span> (160+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584
                   </div>
                 </div>
                 <button

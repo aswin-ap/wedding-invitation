@@ -81,14 +81,14 @@ body {
 
 /* Hero Editorial Portrait Focal Framing & Slow Ken Burns Animation */
 .hero-bg-focal {
-  object-position: 53% 0%;
-  transform-origin: 53% 18%;
+  object-position: 48.5% 0%;
+  transform-origin: 48.5% 22%;
 }
 
 @media (min-width: 768px) {
   .hero-bg-focal {
-    object-position: 50.5% 0%;
-    transform-origin: 50.5% 18%;
+    object-position: 50.5% 12%;
+    transform-origin: 50.5% 25%;
   }
 }
 
@@ -97,7 +97,7 @@ body {
     transform: scale(1.005) translate3d(0, 0, 0);
   }
   50% {
-    transform: scale(1.035) translate3d(-0.3%, -0.2%, 0);
+    transform: scale(1.03) translate3d(-0.25%, -0.15%, 0);
   }
   100% {
     transform: scale(1.005) translate3d(0, 0, 0);
@@ -109,25 +109,25 @@ body {
   will-change: transform;
 }
 
-/* Clear Upper Portrait Window + Luxury Emerald Readability Scrim */
+/* Clear Upper Portrait Window + Seamless Bottom Fade into Emerald-950 (#051812) */
 .hero-portrait-overlay {
   background: linear-gradient(
     to bottom,
-    rgba(5, 24, 18, 0.68) 0%,
-    rgba(5, 24, 18, 0.12) 8%,
-    rgba(5, 24, 18, 0.06) 20%,
-    rgba(5, 24, 18, 0.2) 32%,
-    rgba(5, 24, 18, 0.7) 44%,
-    rgba(5, 24, 18, 0.88) 64%,
-    rgba(5, 24, 18, 0.98) 100%
+    rgba(5, 24, 18, 0.55) 0%,
+    rgba(5, 24, 18, 0.08) 14%,
+    rgba(5, 24, 18, 0.05) 28%,
+    rgba(5, 24, 18, 0.18) 39%,
+    rgba(5, 24, 18, 0.72) 55%,
+    rgba(5, 24, 18, 0.92) 78%,
+    rgba(5, 24, 18, 1) 100%
   );
 }
 
 .hero-portrait-vignette {
   background: radial-gradient(
-    ellipse 88% 40% at 53% 21%,
-    rgba(5, 24, 18, 0) 46%,
-    rgba(5, 24, 18, 0.54) 100%
+    ellipse 88% 42% at 48.5% 24%,
+    rgba(5, 24, 18, 0) 48%,
+    rgba(5, 24, 18, 0.52) 100%
   );
 }
 
@@ -135,11 +135,11 @@ body {
   .hero-portrait-overlay {
     background: linear-gradient(
       to bottom,
-      rgba(5, 24, 18, 0.56) 0%,
-      rgba(5, 24, 18, 0.1) 10%,
-      rgba(5, 24, 18, 0.06) 22%,
-      rgba(5, 24, 18, 0.22) 34%,
-      rgba(5, 24, 18, 0.68) 48%,
+      rgba(5, 24, 18, 0.52) 0%,
+      rgba(5, 24, 18, 0.08) 14%,
+      rgba(5, 24, 18, 0.06) 26%,
+      rgba(5, 24, 18, 0.22) 36%,
+      rgba(5, 24, 18, 0.68) 49%,
       rgba(5, 24, 18, 0.86) 68%,
       rgba(5, 24, 18, 0.97) 100%
     );
@@ -147,7 +147,7 @@ body {
 
   .hero-portrait-vignette {
     background: radial-gradient(
-      ellipse 70% 46% at 50.5% 22%,
+      ellipse 70% 46% at 50.5% 25%,
       rgba(5, 24, 18, 0) 44%,
       rgba(5, 24, 18, 0.62) 100%
     );

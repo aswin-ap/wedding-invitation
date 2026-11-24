@@ -360,9 +360,9 @@
       start: '20261227T100000Z',
       end: '20261228T083000Z',
       location:
-        'Kodanat Mana (150+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584, India',
+        'Kodanat Mana (160+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584, India',
       description:
-        'Celebration Itinerary at Kodanat Mana (150+ Year Old Traditional Kerala Mana):\\n- Sunday, Dec 27, 2026 (3:30 PM): The Haldi Ceremony (Outdoor Lawn • Color Code: Yellow)\\n- Sunday, Dec 27, 2026 (6:30 PM): The Grand Sangeeth (Outdoor Lawn • Color Code: Black)\\n- Monday, Dec 28, 2026 (Muhurtham starts from 10:00AM): The Wedding Ceremony (Inside Kodanat Mana • Dress Code: Traditional Wear)\\nNearest Railway Station: Guruvayur Railway Station\\nGoogle Maps: https://www.google.com/maps/place/Kodanat+Mana/data=!4m2!3m1!1s0x0:0x7e9172ab833b3dd6?sa=X&ved=1t:2428&ictx=111',
+        'Celebration Itinerary at Kodanat Mana (160+ Year Old Traditional Kerala Mana):\\n- Sunday, Dec 27, 2026 (3:30 PM): The Haldi Ceremony (Outdoor Lawn • Color Code: Yellow)\\n- Sunday, Dec 27, 2026 (6:30 PM): The Grand Sangeeth (Outdoor Lawn • Color Code: Black)\\n- Monday, Dec 28, 2026 (Muhurtham starts from 10:00AM): The Wedding Ceremony (Inside Kodanat Mana • Dress Code: Traditional Wear)\\nNearest Railway Station: Guruvayur Railway Station\\nGoogle Maps: https://www.google.com/maps/place/Kodanat+Mana/data=!4m2!3m1!1s0x0:0x7e9172ab833b3dd6?sa=X&ved=1t:2428&ictx=111',
       filename: 'Aswin-Athira-Wedding-Kodanat-Mana.ics',
     },
   };
@@ -408,7 +408,7 @@
   if (copyAddressBtn) {
     copyAddressBtn.addEventListener('click', () => {
       const addr =
-        'Kodanat Mana (150+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584, India';
+        'Kodanat Mana (160+ Year Old Heritage Mana), Vellarakkad, Thrissur, Kerala 680584, India';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(addr).then(() => {
           showToast('Venue address copied to clipboard!', 'check-circle');
