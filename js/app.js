@@ -508,15 +508,6 @@
           <div class="text-[11px] text-champagne-600 flex items-center gap-1.5 font-sans font-medium">
             <span>✨ ${escapeHtml(w.location || 'Wedding Guestbook')}</span>
           </div>
-          <button
-            type="button"
-            data-like-id="${escapeHtml(String(w.id))}"
-            class="wish-like-btn inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-ivory-100 hover:bg-roseGold-300/30 text-slate-600 hover:text-emerald-950 border border-champagne-300/50 text-[11px] transition-all cursor-pointer"
-            title="Send love to this blessing"
-          >
-            <span class="text-rose-500">♥</span>
-            <span class="font-medium">${Number(w.likes || 1)}</span>
-          </button>
         </div>
       </article>
     `;
@@ -559,7 +550,7 @@
   async function fetchWishesFromSupabase(preserveScroll = false) {
     try {
       const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/wishes?select=id,name,relation,location,message,likes,created_at&order=created_at.desc&limit=60`,
+        `${SUPABASE_URL}/rest/v1/wishes?select=id,name,relation,location,message,created_at&order=created_at.desc&limit=60`,
         {
           method: 'GET',
           headers: SUPABASE_HEADERS,
@@ -600,7 +591,6 @@
   if (marqueeContainer && marqueeTrack) {
     let isHovered = false;
     let isPointerDragging = false;
-    let hasDragged = false;
     let startPageX = 0;
     let startScrollLeft = 0;
     let manualCooldownUntil = 0;
@@ -651,9 +641,7 @@
     });
 
     marqueeContainer.addEventListener('mousedown', (e) => {
-      if (e.target.closest('button')) return;
       isPointerDragging = true;
-      hasDragged = false;
       startPageX = e.pageX;
       startScrollLeft = marqueeContainer.scrollLeft;
       marqueeContainer.classList.add('is-dragging');
@@ -662,7 +650,6 @@
     window.addEventListener('mousemove', (e) => {
       if (!isPointerDragging) return;
       const walk = e.pageX - startPageX;
-      if (Math.abs(walk) > 4) hasDragged = true;
       marqueeContainer.scrollLeft = startScrollLeft - walk;
       normalizeInfiniteScroll();
     });
@@ -698,44 +685,6 @@
       },
       { passive: true }
     );
-
-    marqueeTrack.addEventListener('click', async (e) => {
-      if (hasDragged) {
-        hasDragged = false;
-        return;
-      }
-      const btn = e.target.closest('.wish-like-btn');
-      if (!btn) return;
-      const wishId = Number(btn.getAttribute('data-like-id'));
-      const targetWish = wishesData.find((w) => Number(w.id) === wishId);
-      if (!targetWish) return;
-
-      // Optimistic UI update
-      targetWish.likes = Number(targetWish.likes || 1) + 1;
-      const prevScroll = marqueeContainer.scrollLeft;
-      renderWishesMarquee();
-      marqueeContainer.scrollLeft = prevScroll;
-      showToast(`Sent love to ${targetWish.name}'s blessing ♥`, 'heart');
-
-      try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_wish_likes`, {
-          method: 'POST',
-          headers: SUPABASE_HEADERS,
-          body: JSON.stringify({ target_wish_id: wishId }),
-        });
-        if (res.ok) {
-          const authoritativeLikes = await res.json();
-          if (typeof authoritativeLikes === 'number' && authoritativeLikes > 0) {
-            targetWish.likes = authoritativeLikes;
-            const curScroll = marqueeContainer.scrollLeft;
-            renderWishesMarquee();
-            marqueeContainer.scrollLeft = curScroll;
-          }
-        }
-      } catch (err) {
-        console.error('Failed to increment wish likes:', err);
-      }
-    });
   }
 
   // =========================================================================
@@ -1010,7 +959,6 @@
                 relation,
                 location,
                 message,
-                likes: 1,
                 created_at: new Date().toISOString(),
               };
 

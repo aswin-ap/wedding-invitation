@@ -270,9 +270,9 @@
     id="navbar"
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-3 lg:py-5 px-4 sm:px-8 bg-emerald-950/90 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border-b border-champagne-500/20 lg:border-transparent text-ivory-50"
   >
-    <div class="max-w-7xl mx-auto flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6">
-      <!-- Brand Monogram (Left) -->
-      <a href="#hero" class="flex items-center gap-3 group justify-self-start whitespace-nowrap">
+    <div class="max-w-7xl mx-auto flex items-center justify-center lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6">
+      <!-- Brand Monogram (Centered on Mobile, Left on Desktop) -->
+      <a href="#hero" class="flex items-center gap-3 group lg:justify-self-start whitespace-nowrap">
         <span class="font-script text-[1.75rem] sm:text-4xl leading-none pt-1 text-champagne-400 group-hover:text-champagne-300 transition-colors">Aswin &amp; Athira</span>
         <span class="text-[10px] uppercase tracking-[0.28em] font-sans text-ivory-200/75 hidden xl:inline border-l border-champagne-400/40 pl-3">The Wedding</span>
       </a>
@@ -286,18 +286,8 @@
         <a class="nav-link hover:text-champagne-400 transition-colors" href="#wishes">Guestbook</a>
       </nav>
 
-      <!-- Header Right Actions -->
-      <div class="flex items-center justify-end gap-2 sm:gap-3 justify-self-end whitespace-nowrap">
-        <!-- Send Wish CTA -->
-        <button
-          type="button"
-          data-open-wish="true"
-          class="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full border border-champagne-400/60 bg-emerald-900/75 backdrop-blur text-[10px] sm:text-[11px] tracking-[0.15em] sm:tracking-widest uppercase hover:bg-champagne-500 hover:text-emerald-950 transition-all duration-300"
-        >
-          <i data-lucide="heart" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-champagne-400"></i>
-          <span>Send Wish</span>
-        </button>
-      </div>
+      <!-- Desktop Grid Spacer to Keep Navigation True-Centered -->
+      <div class="hidden lg:block" aria-hidden="true"></div>
     </div>
 
     <!-- Always-Visible Mobile & Tablet Navigation Bar (< lg) -->
@@ -776,7 +766,7 @@
         <h2 class="font-serif text-3xl sm:text-5xl font-normal text-emerald-950 mb-3 sm:mb-4">Guestbook &amp; Live Blessings</h2>
         <div class="w-16 sm:w-20 h-[1px] bg-champagne-400 mx-auto mb-4"></div>
         <p class="font-sans text-xs sm:text-sm text-slate-600 font-light mb-6 sm:mb-7 leading-relaxed">
-          Heartfelt blessings from our cherished family and friends. Swipe or drag horizontally to browse wishes at your own pace, tap ♥ to send love, or add your own blessing below.
+          Heartfelt blessings from our cherished family and friends. Swipe or drag horizontally to browse wishes at your own pace, or add your own blessing below.
         </p>
 
         <!-- Single Action Button -->
