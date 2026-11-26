@@ -34,6 +34,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+iframe#nl-badge-frame {
+  display: none;
+}
+
 /* Custom Luxury Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
